@@ -33,10 +33,10 @@ void RemoveWeb(WebPages *W, int id){
     }
 }
 
-boolean isUnique(WebPages W, char url){
+boolean isUnique(WebPages W, char* url){
     for (int i = 0; i < W.NEff; i++)
     {
-        if(strcmp(url, W.buffer[i].web_url)){
+        if(strcmp(url, W.buffer[i].web_url) == 0){
             return false;
         }
     }
@@ -51,11 +51,11 @@ boolean isFull(WebPages W){
     return W.NEff == 100;
 }
 
-int FindURLbyID(WebPages W, int id){
-    for (int i = 0; i < W.NEff; i++)
+char* FindURLbyID(WebPages *W, int id){
+    for (int i = 0; i < W->NEff; i++)
     {
-        if(id == i){
-            return W.buffer[i].web_url;
+        if (W->buffer[i].id == id) {
+            return W->buffer[i].web_url;
         }
     }
     return NULL;
