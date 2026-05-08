@@ -8,6 +8,7 @@
 #include "boolean.h"
 #include "saveload.h"
 #include "set.h"
+#include "tabs.h"
 
 #include "search.h"
 
