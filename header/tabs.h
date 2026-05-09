@@ -10,7 +10,7 @@ typedef char TabName[TAB_NAME_LENGTH];
 
 typedef struct {
     TabName name;
-    bool isUsed;
+    boolean isUsed;
 } Tab;
 
 typedef struct {
