@@ -34,15 +34,15 @@ void tabsGetNameAt(const TabsList *tl, int idx, TabName out); // nama tab pada i
 
 bool tabsListIsFull(const TabsList *tl); 
 
-bool tabsListIsSingle(const TabsList *tl);
+boolean tabsListIsSingle(const TabsList *tl);
 
-bool newTab(TabsList *tl); // tambah tab di akhir list, false jika penuh
+boolean newTab(TabsList *tl); // tambah tab di akhir list, false jika penuh
 
-bool closeTab(TabsList *tl); // menutup current tab, tab pindah ke sebelumnya, false jika hanya ada 1 tab
+boolean closeTab(TabsList *tl); // menutup current tab, tab pindah ke sebelumnya, false jika hanya ada 1 tab
 
-bool nextTab(TabsList *tl, int n); // Berpindah ke tab sebanyak n posisi ke kanan dari current
+boolean nextTab(TabsList *tl, int n); // Berpindah ke tab sebanyak n posisi ke kanan dari current
 
-bool prevTab(TabsList *tl, int n); // Berpindah ke tab sebanyak n posisi ke kiri dari current
+boolean prevTab(TabsList *tl, int n); // Berpindah ke tab sebanyak n posisi ke kiri dari current
 
 void checkTab(const TabsList *tl); // Mencetak seluruh daftar tab dan current tab
 
