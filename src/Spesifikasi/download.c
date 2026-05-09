@@ -6,14 +6,14 @@
 
 // fungsi helper
 // Fungsi manual pengganti isalnum
-bool isAlphanumeric(char c) {
+boolean isAlphanumeric(char c) {
     return (c >= 'a' && c <= 'z') || 
            (c >= 'A' && c <= 'Z') || 
            (c >= '0' && c <= '9');
 }
 
 // Fungsi manual pengganti isalpha
-bool isAlphabet(char c) {
+boolean isAlphabet(char c) {
     return (c >= 'a' && c <= 'z') || 
            (c >= 'A' && c <= 'Z');
 }
@@ -51,11 +51,11 @@ int DownloadCount(const DownloadQueue *dq) {
     return dq->count;
 }
  
-bool DownloadIsEmpty(const DownloadQueue *dq) {
+boolean DownloadIsEmpty(const DownloadQueue *dq) {
     return dq->count == 0;
 }
 
-bool DownloadIsFull(const DownloadQueue *dq) {
+boolean DownloadIsFull(const DownloadQueue *dq) {
     return dq->count >= DOWNLOAD_MAX_AMOUNT;
 }
  
@@ -68,7 +68,7 @@ int DownloadCurrentTicksLeft(const DownloadQueue *dq) {
 }
 
 // operasi utama
-bool IsURLValid(const char *url) {
+boolean IsURLValid(const char *url) {
     int len = strlen(url);
     if (len == 0) return false;
 
@@ -109,7 +109,7 @@ bool IsURLValid(const char *url) {
     return true;
 }
 
-bool DownloadQueueDownload(DownloadQueue *dq, const char *url) {
+boolean DownloadQueueDownload(DownloadQueue *dq, const char *url) {
     // Validasi URL 
     if (!IsURLValid(url)) {
         printf("Masukan tidak valid.\n"); // Output wajib sesuai ketentuan
@@ -140,7 +140,7 @@ bool DownloadQueueDownload(DownloadQueue *dq, const char *url) {
     return true;
 }
 
-bool DownloadTick(DownloadQueue *dq) {
+boolean DownloadTick(DownloadQueue *dq) {
     if (DownloadIsEmpty(dq)) {
         printf("Antrian download saat ini kosong.\n");
         return false;
