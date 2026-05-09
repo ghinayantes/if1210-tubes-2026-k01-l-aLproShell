@@ -32,7 +32,7 @@ void currentTabName(const TabsList *tl, TabName out); // nama current tab
 
 void tabsGetNameAt(const TabsList *tl, int idx, TabName out); // nama tab pada indeks idx, out = nama tersebut
 
-bool tabsListIsFull(const TabsList *tl); 
+boolean tabsListIsFull(const TabsList *tl); 
 
 boolean tabsListIsSingle(const TabsList *tl);
 
