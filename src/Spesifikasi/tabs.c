@@ -87,6 +87,10 @@ bool closeTab(TabsList *tl) {
 }
 
 bool nextTab(TabsList *tl, int n) {
+    if (n < 0 || n > 999999) {
+    printf("Masukan tidak valid.\n");
+    return false;
+    }
     int dest = tl->currentIdx + n;
     if (dest < 0 || dest >= tl->count) {
         return false;
@@ -96,6 +100,10 @@ bool nextTab(TabsList *tl, int n) {
 }
  
 bool prevTab(TabsList *tl, int n) {
+    if (n < 0 || n > 999999) {
+    printf("Masukan tidak valid.\n");
+    return false;
+    }
     int dest = tl->currentIdx - n;
     if (dest < 0 || dest >= tl->count) {
         return false;
