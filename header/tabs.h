@@ -1,7 +1,7 @@
 #ifndef TABS_H
 #define TABS_H
 
-#include <stdbool.h>
+#include "boolean.h"
 
 #define TABS_MAX_AMOUNT 10
 #define TAB_NAME_LENGTH 20
