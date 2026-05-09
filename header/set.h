@@ -33,6 +33,7 @@ boolean isFull(WebPages W);
 
 char* FindURLbyID(WebPages *W, int id);
 
-void PrintWeb(WebPages W);
+char* getWeb(char* url, WebPages *W);
+
 
 #endif

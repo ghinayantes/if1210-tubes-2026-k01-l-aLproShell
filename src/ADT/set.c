@@ -61,4 +61,12 @@ char* FindURLbyID(WebPages *W, int id){
     return NULL;
 }
 
-void PrintWeb(WebPages W);
+char* getWeb(char* url, WebPages *W){
+    for (int i = 0; i < W->NEff; i++)
+    {
+        if (strcmp(W->buffer[i].web_url, url) == 0) {
+            return W->buffer[i].content;
+        }
+    }
+    return NULL;
+}
