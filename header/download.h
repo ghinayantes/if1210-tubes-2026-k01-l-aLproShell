@@ -30,27 +30,27 @@ void DownloadQueueInit(DownloadQueue *dq); // Membuat DownloadQueue kosong
 // selektor
 int  DownloadCount(const DownloadQueue *dq); // Mengembalikan jumlah item dalam antrian
 
-bool DownloadIsEmpty(const DownloadQueue *dq); // Mengembalikan true jika antrian kosong
+boolean DownloadIsEmpty(const DownloadQueue *dq); // Mengembalikan true jika antrian kosong
 
-bool DownloadIsFull(const DownloadQueue *dq); // Mengembalikan true jika antrian penuh
+boolean DownloadIsFull(const DownloadQueue *dq); // Mengembalikan true jika antrian penuh
 
 void DownloadCurrentURL(const DownloadQueue *dq, URL out); // Mengisi out dengan URL yang sedang diunduh, antrian tidak kosong
 
 int  DownloadCurrentTicksLeft(const DownloadQueue *dq); // Mengembalikan sisa ticks dari item yang sedang diunduh, antrian tidak kosong
 
 // operasi utama
-bool IsURLValid(const char *url); 
+boolean IsURLValid(const char *url); 
 /* Mengembalikan true jika URL memenuhi spesifikasi E01:
    - Tidak diawali '-'
    - Panjang label 1-63 karakter (huruf, angka, '-')
    - Tidak diakhiri '-' sebelum titik
    - Memiliki suffix minimal 2 karakter alfabet */
    
-bool DownloadQueueDownload(DownloadQueue *dq, const char *url); // Menambahkan URL ke antrian unduhan
+boolean DownloadQueueDownload(DownloadQueue *dq, const char *url); // Menambahkan URL ke antrian unduhan
 /* Ticks dihitung otomatis dari panjang URL.
    Mengembalikan false jika antrian sudah penuh */
 
-bool DownloadTick(DownloadQueue *dq);
+boolean DownloadTick(DownloadQueue *dq);
 /* tick: Memajukan waktu sistem sebanyak 1 langkah.
    - Jika antrian kosong, cetak pesan kosong.
    - Mengurangi ticksLeft item terdepan sebesar 1.
