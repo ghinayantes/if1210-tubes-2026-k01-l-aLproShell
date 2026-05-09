@@ -39,15 +39,15 @@ void tabsGetNameAt(const TabsList *tl, int idx, TabName out) {
     strncpy(out, tl->tabs[idx].name, TAB_NAME_LENGTH);
 }
 
-bool tabsListIsFull(const TabsList *tl) {
+boolean tabsListIsFull(const TabsList *tl) {
     return tl->count >= TABS_MAX_AMOUNT;
 }
 
-bool tabsListIsSingle(const TabsList *tl) {
+boolean tabsListIsSingle(const TabsList *tl) {
     return tl->count == 1;
 }
 
-bool newTab(TabsList *tl) {
+boolean newTab(TabsList *tl) {
     if (tabsListIsFull(tl)) {
         return false;
     }
@@ -60,7 +60,7 @@ bool newTab(TabsList *tl) {
     return true;
 }
 
-bool closeTab(TabsList *tl) {
+boolean closeTab(TabsList *tl) {
     if (tabsListIsSingle(tl)) {
         return false;
     }
@@ -86,7 +86,7 @@ bool closeTab(TabsList *tl) {
     return true;
 }
 
-bool nextTab(TabsList *tl, int n) {
+boolean nextTab(TabsList *tl, int n) {
     if (n < 0 || n > 999999) {
     printf("Masukan tidak valid.\n");
     return false;
@@ -99,7 +99,7 @@ bool nextTab(TabsList *tl, int n) {
     return true;
 }
  
-bool prevTab(TabsList *tl, int n) {
+boolean prevTab(TabsList *tl, int n) {
     if (n < 0 || n > 999999) {
     printf("Masukan tidak valid.\n");
     return false;
