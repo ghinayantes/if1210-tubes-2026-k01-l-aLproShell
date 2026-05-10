@@ -2,6 +2,7 @@
 #define TABS_H
 
 #include "boolean.h"
+#include "stack.h"
 
 #define TABS_MAX_AMOUNT 10
 #define TAB_NAME_LENGTH 20
@@ -11,6 +12,7 @@ typedef char TabName[TAB_NAME_LENGTH];
 typedef struct {
     TabName name;
     boolean isUsed;
+    Page tabHistory;
 } Tab;
 
 typedef struct {
