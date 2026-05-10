@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include "boolean.h"
 #include <string.h>
-#define MAX_CAPACITY 100
+#define MAX_WEB 100
 #define IDX_UNDEF -1
 
 typedef struct {
@@ -11,7 +11,7 @@ typedef struct {
 } Web;
 
 typedef struct {
-    Web buffer[MAX_CAPACITY];
+    Web buffer[MAX_WEB];
     int idxTop;
 } Stack;
 
@@ -35,13 +35,15 @@ void push(Stack *S, Web W);
 
 void pop(Stack *S, Web *W);
 
-void createTab(Page *T);
+void createTab(Page *P);
 
-void bukaHalaman(Page *T, Web New);
+void bukaHalaman(Page *P, Web New);
 
-void back(Page *T);
+void back(Page *P, int langkah);
 
-void forward(Page *T);
+void forward(Page *P, int langkah);
+
+void viewTabHistory(Page P);
 
 
 

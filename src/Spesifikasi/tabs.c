@@ -18,6 +18,7 @@ void tabsListInit(TabsList *tl) {
     tl->tabCounter++;
     snprintf(tl->tabs[0].name, TAB_NAME_LENGTH, "TAB%d", tl->tabCounter);
     tl->tabs[0].isUsed = true;
+    createTab(&(tl->tabs[0].tabHistory));
     tl->count = 1;
     tl->currentIdx = 0;
 }
@@ -55,6 +56,7 @@ boolean newTab(TabsList *tl) {
     tl->tabCounter++;
     snprintf(tl->tabs[tl->count].name, TAB_NAME_LENGTH, "TAB%d", tl->tabCounter);
     tl->tabs[tl->count].isUsed = true;
+    createTab(&(tl->tabs[tl->count].tabHistory));
     tl->count++;
  
     return true;

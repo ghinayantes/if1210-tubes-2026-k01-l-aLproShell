@@ -15,7 +15,7 @@ boolean isEmpty(Stack S){
 }
 
 boolean isFull(Stack S){
-    return (S.idxTop == MAX_CAPACITY-1);
+    return (S.idxTop == MAX_WEB-1);
 }
 
 void push (Stack *S, Web W){
@@ -35,43 +35,75 @@ void pop(Stack *S, Web *W){
         printf("Gagal pop: History kosong!\n");
     }
 }
-void createTab(Page *T){
-    createStack(&(T->backHistory));
-    createStack(&(T->forwardHistory));
-    T->Empty = true;
+void createTab(Page *P){
+    createStack(&(P->backHistory));
+    createStack(&(P->forwardHistory));
+    P->Empty = true;
 }
 
-void bukaHalaman(Page *T,Web New){
-    if (T->Empty == false){
-        push(&(T->backHistory), T->currentTab);
+void bukaHalaman(Page *P,Web New){
+    if (P->Empty == false){
+        push(&(P->backHistory), P->currentTab);
     }
-    T->currentTab = New;
-    T->Empty = false;
-    createStack(&(T->forwardHistory));
+    P->currentTab = New;
+    P->Empty = false;
+    createStack(&(P->forwardHistory));
 }
 
-void back(Page *T){
-    if (T->Empty){ // Kasus 1
-        printf("ERROR: BACK TIDAK BISA DIGUNAKAN LAGI KARENA TIDAK ADA HALAMAN SEBELUMNYA!");
-    } else if (isEmpty(T->backHistory)){ // Kasus 2
-        printf("ERROR: BACK TIDAK BISA DIGUNAKAN LAGI KARENA TIDAK ADA HALAMAN SEBELUMNYA!");
-    } else{         // Kasus 3
-        push(&(T->forwardHistory),T->currentTab);
-        pop(&(T->backHistory),&(T->currentTab));
-    }
-}
+void back(Page *P, int langkah){
+    if (langkah < 1 || langkah > 999999){
+        printf("Input tidak valid\n");
+    } else {
+        if (P->Empty){ 
+            printf("ERROR: BACK TIDAK BISA DIGUNAKAN LAGI KARENA TIDAK ADA HALAMAN SEBELUMNYA!\n");
+        } else if (isEmpty(P->backHistory)){ 
+            printf("ERROR: BACK TIDAK BISA DIGUNAKAN LAGI KARENA TIDAK ADA HALAMAN SEBELUMNYA!\n");
+        } else {
 
-void forward(Page *T){
-    if (T->Empty){
-        printf("ERROR: BACK TIDAK BISA DIGUNAKAN LAGI KARENA TIDAK ADA HALAMAN SEBELUMNYA!");
-    } else if (isEmpty(T->forwardHistory)){
-        printf("ERROR: BACK TIDAK BISA DIGUNAKAN LAGI KARENA TIDAK ADA HALAMAN SEBELUMNYA!");
-    } else{
-        push(&(T->backHistory),T->currentTab);
-        pop(&(T->forwardHistory),&(T->currentTab));
+            while (langkah > 0 && !isEmpty(P->backHistory)){
+                push(&(P->forwardHistory), P->currentTab);
+                pop(&(P->backHistory), &(P->currentTab));
+                langkah--;
+            }
+            printf("BACK: KEMBALI KE HALAMAN %s\n", P->currentTab.url);
+        }
     }
 }
 
+void forward(Page *P, int langkah){
+    if (langkah < 1 || langkah > 999999){
+        printf("Input tidak valid\n");
+    } else {
+        if (P->Empty){
+            printf("ERROR: FORWARD TIDAK BISA DIGUNAKAN LAGI KARENA TIDAK ADA HALAMAN SELANJUTNYA!\n");
+        } else if (isEmpty(P->forwardHistory)){
+            printf("ERROR: FORWARD TIDAK BISA DIGUNAKAN LAGI KARENA TIDAK ADA HALAMAN SELANJUTNYA!\n");
+        } else {
+            while(langkah > 0 && !isEmpty(P->forwardHistory)) {
+                push(&(P->backHistory), P->currentTab);
+                pop(&(P->forwardHistory), &(P->currentTab));
+                langkah--;
+            }
+            printf("FORWARD: KEMBALI KE HALAMAN %s\n", P->currentTab.url);
+        }
+    }
+}
 
-
+void viewTabHistory(Page P){
+    if (P.Empty){
+        printf("Anda belum membuka tab manapun\n");
+    } else {
+        int number = 0;
+        for(int i = 0; i <= P.backHistory.idxTop; i++){
+            printf("[%d] %s\n", number, P.backHistory.buffer[i].url); 
+            number++;
+        }
+        printf("[%d] %s <- YOU ARE HERE\n", number, P.currentTab.url);
+        number++;
+        for(int i = P.forwardHistory.idxTop; i >= 0; i--){
+            printf("[%d] %s\n", number, P.forwardHistory.buffer[i].url); 
+            number++;
+        }
+    }
+}
 
