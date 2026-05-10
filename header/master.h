@@ -11,6 +11,7 @@
 #include "tabs.h"
 #include "map.h"
 #include "download.h"
+#include "stack.h"
 
 #include "search.h"
 #include "openpage.h"
