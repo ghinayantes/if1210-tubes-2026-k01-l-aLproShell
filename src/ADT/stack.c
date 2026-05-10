@@ -35,6 +35,43 @@ void pop(Stack *S, Web *W){
         printf("Gagal pop: History kosong!\n");
     }
 }
+void createTab(Page *T){
+    createStack(&(T->backHistory));
+    createStack(&(T->forwardHistory));
+    T->Empty = true;
+}
+
+void bukaHalaman(Page *T,Web New){
+    if (T->Empty == false){
+        push(&(T->backHistory), T->currentTab);
+    }
+    T->currentTab = New;
+    T->Empty = false;
+    createStack(&(T->forwardHistory));
+}
+
+void back(Page *T){
+    if (T->Empty){ // Kasus 1
+        printf("ERROR: BACK TIDAK BISA DIGUNAKAN LAGI KARENA TIDAK ADA HALAMAN SEBELUMNYA!");
+    } else if (isEmpty(T->backHistory)){ // Kasus 2
+        printf("ERROR: BACK TIDAK BISA DIGUNAKAN LAGI KARENA TIDAK ADA HALAMAN SEBELUMNYA!");
+    } else{         // Kasus 3
+        push(&(T->forwardHistory),T->currentTab);
+        pop(&(T->backHistory),&(T->currentTab));
+    }
+}
+
+void forward(Page *T){
+    if (T->Empty){
+        printf("ERROR: BACK TIDAK BISA DIGUNAKAN LAGI KARENA TIDAK ADA HALAMAN SEBELUMNYA!");
+    } else if (isEmpty(T->forwardHistory)){
+        printf("ERROR: BACK TIDAK BISA DIGUNAKAN LAGI KARENA TIDAK ADA HALAMAN SEBELUMNYA!");
+    } else{
+        push(&(T->backHistory),T->currentTab);
+        pop(&(T->forwardHistory),&(T->currentTab));
+    }
+}
+
 
 
 
