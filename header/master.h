@@ -8,7 +8,11 @@
 #include "boolean.h"
 #include "saveload.h"
 #include "set.h"
+#include "tabs.h"
+#include "map.h"
+#include "download.h"
 
 #include "search.h"
+#include "openpage.h"
 
 #endif
