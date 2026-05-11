@@ -8,17 +8,17 @@
 
 typedef struct {
     char url[100]; 
-} Web;
+} Webname;
 
 typedef struct {
-    Web buffer[MAX_WEB];
+    Webname buffer[MAX_WEB];
     int idxTop;
 } Stack;
 
 typedef struct {
     Stack backHistory;
     Stack forwardHistory;
-    Web currentTab;
+    Webname currentTab;
     boolean Empty;
 }Page;
 
@@ -27,17 +27,17 @@ void createStack(Stack *S);
 
 int length(Stack S);
 
-boolean isEmpty(Stack S);
+boolean isStackEmpty(Stack S);
 
-boolean isFull(Stack S);
+boolean isStackFull(Stack S);
 
-void push(Stack *S, Web W);
+void push(Stack *S, Webname W);
 
-void pop(Stack *S, Web *W);
+void pop(Stack *S, Webname *W);
 
 void createTab(Page *P);
 
-void bukaHalaman(Page *P, Web New);
+void bukaHalaman(Page *P, Webname New);
 
 void back(Page *P, int langkah);
 

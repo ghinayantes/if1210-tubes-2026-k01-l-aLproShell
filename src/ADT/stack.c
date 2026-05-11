@@ -18,7 +18,7 @@ boolean isFull(Stack S){
     return (S.idxTop == MAX_WEB-1);
 }
 
-void push (Stack *S, Web W){
+void push (Stack *S, Webname W){
     if (!isFull(*S)) {
         S->idxTop++;
         S->buffer[S->idxTop] = W;
@@ -27,7 +27,7 @@ void push (Stack *S, Web W){
     }
 }
 
-void pop(Stack *S, Web *W){
+void pop(Stack *S, Webname *W){
     if (!isEmpty(*S)) {
         *W = S->buffer[S->idxTop];
         S->idxTop--;
@@ -41,7 +41,7 @@ void createTab(Page *P){
     P->Empty = true;
 }
 
-void bukaHalaman(Page *P,Web New){
+void bukaHalaman(Page *P,Webname New){
     if (P->Empty == false){
         push(&(P->backHistory), P->currentTab);
     }
