@@ -5,8 +5,8 @@ void CreateWeb(WebPages *W){
 }
 
 void AddWeb(WebPages *W, int id, char* url, char* content){
-    if (!isFull(*W)) {
-        if (isUnique(*W, url)) {
+    if (!isFullWeb(*W)) {
+        if (isUniqueWeb(*W, url)) {
             W->buffer[W->NEff].id = id; 
             strcpy(W->buffer[W->NEff].web_url, url);
             strcpy(W->buffer[W->NEff].content, content);
@@ -33,7 +33,7 @@ void RemoveWeb(WebPages *W, int id){
     }
 }
 
-boolean isUnique(WebPages W, char* url){
+boolean isUniqueWeb(WebPages W, char* url){
     for (int i = 0; i < W.NEff; i++)
     {
         if(strcmp(url, W.buffer[i].web_url) == 0){
@@ -43,11 +43,11 @@ boolean isUnique(WebPages W, char* url){
     return true;
 }
 
-boolean isEmpty(WebPages W){
+boolean isEmptyWeb(WebPages W){
     return W.NEff == 0;
 }
 
-boolean isFull(WebPages W){
+boolean isFullWeb(WebPages W){
     return W.NEff == 100;
 }
 
