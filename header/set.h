@@ -25,11 +25,11 @@ void AddWeb(WebPages *W, int id, char* url, char* content);
 
 void RemoveWeb(WebPages *W, int id);
 
-boolean isUnique(WebPages W, char* url);
+boolean isUniqueWeb(WebPages W, char* url);
 
-boolean isEmpty(WebPages W);
+boolean isEmptyWeb(WebPages W);
 
-boolean isFull(WebPages W);
+boolean isFullWeb(WebPages W);
 
 char* FindURLbyID(WebPages *W, int id);
 
