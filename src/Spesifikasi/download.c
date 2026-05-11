@@ -5,14 +5,12 @@
 #include "../../header/download.h"
 
 // fungsi helper
-// Fungsi manual pengganti isalnum
 boolean isAlphanumeric(char c) {
     return (c >= 'a' && c <= 'z') || 
            (c >= 'A' && c <= 'Z') || 
            (c >= '0' && c <= '9');
 }
 
-// Fungsi manual pengganti isalpha
 boolean isAlphabet(char c) {
     return (c >= 'a' && c <= 'z') || 
            (c >= 'A' && c <= 'Z');
@@ -24,7 +22,6 @@ int DownloadCalcTicks(const char *url) {
 }
 
 void DownloadQueueStripExtension(const char *url, char *out) {
-    // Salin url ke out 
     strncpy(out, url, URL_MAX_LENGTH - 1);
     out[URL_MAX_LENGTH - 1] = '\0';
  
@@ -72,47 +69,46 @@ boolean IsURLValid(const char *url) {
     int len = strlen(url);
     if (len == 0) return false;
 
-    // Cek karakter pertama: tidak boleh '-'
+    // Cek karakter pertama
     if (url[0] == '-') return false;
 
-    // Cari posisi titik pertama untuk menentukan batas label (domain utama)
+    // Cari posisi titik pertama 
     char *firstDot = strchr(url, '.');
-    if (firstDot == NULL) return false; // Wajib ada titik
+    if (firstDot == NULL) return false; 
 
     int labelLen = firstDot - url;
 
-    // Cek panjang label: 1-63 karakter
+    // Cek panjang label
     if (labelLen < 1 || labelLen > 63) return false;
 
-    // Cek karakter sebelum titik: tidak boleh '-'
+    // Cek karakter sebelum titik
     if (*(firstDot - 1) == '-') return false;
 
-    // Validasi isi label (sebelum titik pertama)
+    // Validasi isi label 
     for (int i = 0; i < labelLen; i++) {
         if (!isAlphanumeric(url[i]) && url[i] != '-') {
-            return false; // Hanya boleh huruf, angka, atau '-'
+            return false; 
         }
     }
 
-    // Validasi Suffix (setelah titik terakhir)
+    // Validasi Suffix 
     char *lastDot = strrchr(url, '.');
     int suffixLen = strlen(lastDot + 1);
 
-    if (suffixLen < 2) return false; // Minimal 2 karakter alfabet
+    if (suffixLen < 2) return false; 
 
     for (int i = 1; i <= suffixLen; i++) {
         if (!isAlphabet(lastDot[i])) {
-            return false; // Suffix harus alfabet
+            return false; 
         }
     }
 
     return true;
 }
 
-boolean DownloadQueueDownload(DownloadQueue *dq, const char *url) {
-    // Validasi URL 
+boolean DownloadQueueDownload(DownloadQueue *dq, const char *url) { 
     if (!IsURLValid(url)) {
-        printf("Masukan tidak valid.\n"); // Output wajib sesuai ketentuan
+        printf("Masukan tidak valid.\n"); 
         return false;
     }
 
@@ -149,7 +145,6 @@ boolean DownloadTick(DownloadQueue *dq) {
     dq->items[dq->head].ticksLeft--;
  
     if (dq->items[dq->head].ticksLeft > 0) {
-        // Masih dalam proses unduh 
         printf("Downloading %s... (%d ticks tersisa)\n", dq->items[dq->head].url, dq->items[dq->head].ticksLeft);
         return false;
     }
@@ -173,14 +168,12 @@ boolean DownloadTick(DownloadQueue *dq) {
  
     printf("%s selesai didownload, ke file %s.txt.\n", finishedURL, stripped);
  
-    // Dequeue: geser head 
     dq->items[dq->head].url[0] = '\0';
     dq->items[dq->head].ticksLeft = 0;
     dq->items[dq->head].ticksTotal = 0;
     dq->head = (dq->head + 1) % DOWNLOAD_MAX_AMOUNT;
     dq->count--;
  
-    // Jika masih ada item berikutnya 
     if (!DownloadIsEmpty(dq)) {
         printf("Lanjut downloading %s... (%d ticks tersisa)\n",
                dq->items[dq->head].url,
