@@ -10,16 +10,16 @@ int length(Stack S){
     return S.idxTop+1;
 }
 
-boolean isEmpty(Stack S){
+boolean isStackEmpty(Stack S){
     return (S.idxTop == IDX_UNDEF);
 }
 
-boolean isFull(Stack S){
+boolean isStackFull(Stack S){
     return (S.idxTop == MAX_WEB-1);
 }
 
 void push (Stack *S, Webname W){
-    if (!isFull(*S)) {
+    if (!isStackFull(*S)) {
         S->idxTop++;
         S->buffer[S->idxTop] = W;
     } else {
@@ -28,7 +28,7 @@ void push (Stack *S, Webname W){
 }
 
 void pop(Stack *S, Webname *W){
-    if (!isEmpty(*S)) {
+    if (!isStackEmpty(*S)) {
         *W = S->buffer[S->idxTop];
         S->idxTop--;
     } else {
@@ -56,11 +56,11 @@ void back(Page *P, int langkah){
     } else {
         if (P->Empty){ 
             printf("ERROR: BACK TIDAK BISA DIGUNAKAN LAGI KARENA TIDAK ADA HALAMAN SEBELUMNYA!\n");
-        } else if (isEmpty(P->backHistory)){ 
+        } else if (isStackEmpty(P->backHistory)){ 
             printf("ERROR: BACK TIDAK BISA DIGUNAKAN LAGI KARENA TIDAK ADA HALAMAN SEBELUMNYA!\n");
         } else {
 
-            while (langkah > 0 && !isEmpty(P->backHistory)){
+            while (langkah > 0 && !isStackEmpty(P->backHistory)){
                 push(&(P->forwardHistory), P->currentTab);
                 pop(&(P->backHistory), &(P->currentTab));
                 langkah--;
@@ -76,10 +76,10 @@ void forward(Page *P, int langkah){
     } else {
         if (P->Empty){
             printf("ERROR: FORWARD TIDAK BISA DIGUNAKAN LAGI KARENA TIDAK ADA HALAMAN SELANJUTNYA!\n");
-        } else if (isEmpty(P->forwardHistory)){
+        } else if (isStackEmpty(P->forwardHistory)){
             printf("ERROR: FORWARD TIDAK BISA DIGUNAKAN LAGI KARENA TIDAK ADA HALAMAN SELANJUTNYA!\n");
         } else {
-            while(langkah > 0 && !isEmpty(P->forwardHistory)) {
+            while(langkah > 0 && !isStackEmpty(P->forwardHistory)) {
                 push(&(P->backHistory), P->currentTab);
                 pop(&(P->forwardHistory), &(P->currentTab));
                 langkah--;
