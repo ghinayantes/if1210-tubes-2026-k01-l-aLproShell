@@ -1,4 +1,4 @@
-#include "../../header/tabs.h"
+#include "tabs.h"
 #include <stdio.h>
 #include <string.h>
 

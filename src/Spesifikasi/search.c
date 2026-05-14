@@ -1,4 +1,5 @@
-#include "../../header/search.h"
+#include "search.h"
+#include "set.h"
 
 void badChar(char* s, int len, int bc[]){
     for (int i = 0; i < 256; i++)
