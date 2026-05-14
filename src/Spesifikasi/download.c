@@ -2,7 +2,7 @@
 #include <string.h>
 #include <math.h>
 
-#include "../../header/download.h"
+#include "download.h"
 
 // fungsi helper
 boolean isAlphanumeric(char c) {
@@ -73,7 +73,7 @@ boolean IsURLValid(const char *url) {
     if (url[0] == '-') return false;
 
     // Cari posisi titik pertama 
-    char *firstDot = strchr(url, '.');
+    const char *firstDot = strchr(url, '.');
     if (firstDot == NULL) return false; 
 
     int labelLen = firstDot - url;
@@ -92,7 +92,7 @@ boolean IsURLValid(const char *url) {
     }
 
     // Validasi Suffix 
-    char *lastDot = strrchr(url, '.');
+    const char *lastDot = strrchr(url, '.');
     int suffixLen = strlen(lastDot + 1);
 
     if (suffixLen < 2) return false; 

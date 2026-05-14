@@ -1,4 +1,4 @@
-#include "../../header/openpage.h"
+#include "openpage.h"
 #include <stdio.h>
 
 void printReal(char *str){

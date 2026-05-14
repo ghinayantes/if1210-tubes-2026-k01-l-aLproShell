@@ -1,5 +1,15 @@
-#include "../../header/map.h"
+#include "map.h"
+#include <string.h>
+#include <stdlib.h>
 
+static char *mapstrdup(const char *src) {
+    size_t len = strlen(src) + 1;
+    char *dst = (char *)malloc(len);
+    if (dst != NULL) {
+        memcpy(dst, src, len);
+    }
+    return dst;
+}
 
 int hash(char* key, int capacity) {
     unsigned long hashVal = 5381;
@@ -56,7 +66,7 @@ void setMap(char* key, char* value, Map *M){
     while (cur != NULL) {
         if(strcmp(cur->key, key) == 0){
             free(cur->value);
-            cur->value = strdup(value);
+            cur->value = mapstrdup(value);
             gotoRecentMap(M, cur);
             return;
         }
@@ -68,8 +78,8 @@ void setMap(char* key, char* value, Map *M){
     }
 
     Node* setNode = (Node*)calloc(1,sizeof(Node));
-    setNode->key = strdup(key);
-    setNode->value = strdup(value);
+    setNode->key = mapstrdup(key);
+    setNode->value = mapstrdup(value);
     
     setNode->mapNext = M->buffer[i];
     M->buffer[i] = setNode;
