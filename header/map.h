@@ -26,6 +26,8 @@ typedef struct {
 
 void CreateMap(Map *M);
 
+void DestroyMap(Map *M);
+
 boolean isEmptyMap(Map *M);
 
 void gotoRecentMap(Map *M, Node* n);
