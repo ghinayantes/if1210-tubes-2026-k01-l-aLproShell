@@ -30,6 +30,29 @@ void CreateMap(Map *M){
     M->tail = NULL;
 }
 
+void DestroyMap(Map *M) {
+    if (M == NULL) return;
+    if (M->buffer != NULL) {
+        for (int i = 0; i < MAX_CAPACITY; i++) {
+            Node *cur = M->buffer[i];
+            while (cur != NULL) {
+                Node *next = cur->mapNext;
+                free(cur->key);
+                free(cur->value);
+                free(cur);
+                cur = next;
+            }
+        }
+        free(M->buffer);
+    }
+
+    M->buffer = NULL;
+    M->capacity = 0;
+    M->size = 0;
+    M->head = NULL;
+    M->tail = NULL;
+}
+
 boolean isEmptyMap(Map *M){
     return M->size == 0;
 }
