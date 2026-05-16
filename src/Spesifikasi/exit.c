@@ -1,7 +1,7 @@
 #include "../header/saveload.h"
 #include <stdio.h>
 
-void exitProgram() {
+void exitProgram(WebPages W) {
     char pilih;
     char folder[100];
     
@@ -13,7 +13,7 @@ void exitProgram() {
         printf("Please input the save folder\n");
         scanf("%s", folder);
 
-        SavetoCSV(folder);
+        SavetoCSV(W, folder);
     }
 
     printf("Goodbye~\n");
