@@ -12,7 +12,7 @@ void printReal(char *str){
     }
 }
 
-void openpage(char* s, WebPages *W, Map *M){
+
 void openpage(char* s, WebPages *W, Map *M, TabsList *TL){
     char* val = getMap(s, M);
     if (val != NULL) {

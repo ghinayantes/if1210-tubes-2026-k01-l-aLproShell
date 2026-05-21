@@ -136,6 +136,21 @@ int main() {
             scanf("%d", &langkah);
             int aktif = TL.currentIdx;
             back(&(TL.tabs[aktif].tabHistory), langkah);
+
+            if (!TL.tabs[aktif].tabHistory.Empty) {
+                char *urlSekarang = TL.tabs[aktif].tabHistory.currentTab.url;
+                char *isiHalaman = getMap(urlSekarang, &M);
+                if (isiHalaman != NULL) {
+                    printReal(isiHalaman); 
+                    printf("\n");
+                } else {
+                    isiHalaman = getWeb(urlSekarang, &W);
+                    if (isiHalaman != NULL) {
+                        printReal(isiHalaman);
+                        printf("\n");
+                    }
+                }
+            }
         }
 
         else if (strcmp(command, "forward") == 0) {
@@ -143,6 +158,21 @@ int main() {
             scanf("%d", &langkah);
             int aktif = TL.currentIdx;
             forward(&(TL.tabs[aktif].tabHistory), langkah);
+            
+            if (!TL.tabs[aktif].tabHistory.Empty) {
+                char *urlSekarang = TL.tabs[aktif].tabHistory.currentTab.url;
+                char *isiHalaman = getMap(urlSekarang, &M);
+                if (isiHalaman != NULL) {
+                    printReal(isiHalaman); 
+                    printf("\n");
+                } else {
+                    isiHalaman = getWeb(urlSekarang, &W);
+                    if (isiHalaman != NULL) {
+                        printReal(isiHalaman);
+                        printf("\n");
+                    }
+                }
+            }
         }
 
         else if (strcmp(command, "viewhistory") == 0) {

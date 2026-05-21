@@ -2,8 +2,7 @@
 #define TABS_H
 
 #include "boolean.h"
-#include "stack.h"
-
+#include "history.h"
 #define TABS_MAX_AMOUNT 10
 #define TAB_NAME_LENGTH 20
 
