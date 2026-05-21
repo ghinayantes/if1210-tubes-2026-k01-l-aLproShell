@@ -20,7 +20,6 @@ int main() {
     int tab;
     WebPages W;
     Map M;
-    unsigned int discover_seed = 12345;
     TabsList TL;
     DownloadQueue DQ;
     CreateWeb(&W);
@@ -154,16 +153,31 @@ int main() {
             DownloadTick(&DQ);
         }
 
-        else if (strcmp(command, "discover") == 0) {
-            runDiscover(&W, &discover_seed);
+        // else if (strcmp(command, "discover") == 0) {
+        //     runDiscover(&W, &discover_seed);
+        // }
+
+        else if (strcmp(command, "add_page") == 0) {
+            char url[100];
+            scanf("%s", url);
+
+            if(isWebsiteValid(url)){
+                if(!isUniqueWeb(W, url)){
+                    printf("[ERROR] URL %s sudah ada di database!\n", url);
+                }
+                else{
+                    runAddPage(&W, url);
+                }
+            } 
+            else printf("Format domain tidak valid, tolong tulis domain kembali");   
         }
 
-        else if (strcmp(command, "addpage") == 0) {
-            runAddPage(&W);
-        }
+        else if (strcmp(command, "delete_page") == 0) {
+            char url[100];
+            scanf("%s", url);
 
-        else if (strcmp(command, "deletepage") == 0) {
-            runDeletePage(&W);
+            if(isWebsiteValid(url)) runDeletePage(&W, url);
+            else printf("Format domain tidak valid, tolong tulis domain kembali");
         }
 
         else if (strcmp(command, "load") == 0) {
