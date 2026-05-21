@@ -33,7 +33,7 @@ static void loadAgain(const char *path, char *out) {
 }
 
 static boolean loadData(WebPages *W) {
-    if (LoadFromCSV(W, "../config/data.csv")) return true;
+    if (LoadFromCSV(W, "config/data.csv")) return true;
     return false;
 }
 
