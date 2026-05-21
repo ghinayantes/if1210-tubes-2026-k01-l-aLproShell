@@ -55,6 +55,7 @@ int main() {
     int tab;
     WebPages W;
     Map M;
+    unsigned int discover_seed = 12345;
     TabsList TL;
     DownloadQueue DQ;
     CreateWeb(&W);
@@ -78,6 +79,9 @@ int main() {
         printf("[6] nexttab\n");
         printf("[7] closetab\n");
         printf("[8] download\n");
+        printf("[9] discover\n");
+        printf("[10] addpage\n");
+        printf("[11] deletepage\n");
 
         printf("\n>>");
         char command[100];
@@ -134,6 +138,18 @@ int main() {
 
         else if (strcmp(command, "tick") == 0) {
             DownloadTick(&DQ);
+        }
+
+        else if (strcmp(command, "discover") == 0) {
+            runDiscover(&W, &discover_seed);
+        }
+
+        else if (strcmp(command, "addpage") == 0) {
+            runAddPage(&W);
+        }
+
+        else if (strcmp(command, "deletepage") == 0) {
+            runDeletePage(&W);
         }
 
         else if (strcmp(command, "load") == 0) {

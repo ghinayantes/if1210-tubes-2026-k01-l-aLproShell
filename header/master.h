@@ -15,5 +15,7 @@
 
 #include "search.h"
 #include "openpage.h"
+#include "discover.h"
+#include "pagemanagement.h"
 
 #endif
