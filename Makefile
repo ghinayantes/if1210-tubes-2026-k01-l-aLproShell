@@ -19,7 +19,7 @@ build:
 	@echo "build selesai: $(TARGET)"
 
 run: build
-	./$(TARGET)
+	@cd $(BUILD_DIR) && ./alprog1
 
 clean:
 	rm -rf $(BUILD_DIR)
