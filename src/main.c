@@ -37,6 +37,11 @@ static boolean loadData(WebPages *W) {
     return false;
 }
 
+static boolean loadLinks(WebPages *W) {
+    if (LoadLinkedPages(W, "config/linked_pages.csv")) return true;
+    return false;
+}
+
 void printBanner() {
     printf("█████████   ████                                █████████  █████               ████  ████ \n");
     printf("  ███░░░░░███ ░░███                               ███░░░░░███░░███               ░░███ ░░███ \n");
@@ -66,6 +71,13 @@ int main() {
 
     if(loadData(&W)){
         printf("\n%d Website dari database telah di-load otomatis...\n", W.NEff);
+        if(loadLinks(&W)) {
+            printf("Hubungan antar halaman (links) berhasil dimuat.\n");
+        } else {
+            printf("Peringatan: File struktur link tidak ditemukan atau gagal dimuat.\n");
+        }
+    } else {
+        printf("Gagal memuat database website utama (data.csv).\n");
     }
 
     while(true){
