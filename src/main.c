@@ -20,6 +20,7 @@ int main() {
     int tab;
     WebPages W;
     Map M;
+    unsigned int discover_seed = 12345;
     TabsList TL;
     DownloadQueue DQ;
     CreateWeb(&W);

@@ -19,5 +19,7 @@
 #include "discover.h"
 #include "pagemanagement.h"
 #include "history.h"
+#include "discover.h"
+#include "pagemanagement.h"
 
 #endif
