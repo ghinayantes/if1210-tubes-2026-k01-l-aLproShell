@@ -35,17 +35,4 @@ void push(Stack *S, Webname W);
 
 void pop(Stack *S, Webname *W);
 
-void createTab(Page *P);
-
-void bukaHalaman(Page *P, Webname New);
-
-void back(Page *P, int langkah);
-
-void forward(Page *P, int langkah);
-
-void viewTabHistory(Page P);
-
-
-
-
 #endif

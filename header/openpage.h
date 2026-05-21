@@ -6,7 +6,10 @@
 
 #include "set.h"
 #include "map.h"
+#include "tabs.h"
 
-void openpage(char* s, WebPages *W, Map *M);
+void printReal(char *str);
+
+void openpage(char* s, WebPages *W, Map *M, TabsList *TL);
 
 #endif

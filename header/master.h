@@ -12,10 +12,12 @@
 #include "map.h"
 #include "download.h"
 #include "stack.h"
+#include "regex.h"
 
 #include "search.h"
 #include "openpage.h"
 #include "discover.h"
 #include "pagemanagement.h"
+#include "history.h"
 
 #endif
