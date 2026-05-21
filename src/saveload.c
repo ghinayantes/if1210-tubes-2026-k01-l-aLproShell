@@ -1,11 +1,11 @@
-#include "../header/saveload.h"
+#include "saveload.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 
-void LoadFromCSV(WebPages *W, char *f) {
-    FILE *file = fopen(f, "r");
-    if (!file) return;
+boolean LoadFromCSV(WebPages *W, const char *filepath) {
+    FILE *file = fopen(filepath, "r");
+    if (!file) return false;
 
     W->NEff = 0;
     char line[2000];
@@ -21,14 +21,16 @@ void LoadFromCSV(WebPages *W, char *f) {
     }
 
     fclose(file);
+    return true;
 }
 
-void SaveToCSV(WebPages W, char *f) {
-    FILE *file = fopen(f, "w");
-    if (!file) return;
+boolean SaveToCSV(WebPages W, const char *filepath) {
+    FILE *file = fopen(filepath, "w");
+    if (!file) return false;
 
     for (int i = 0; i < W.NEff; i++) {
         fprintf(file, "%d,%s,%s\n", W.buffer[i].id, W.buffer[i].web_url, W.buffer[i].content);
     }
     fclose(file);
+    return true;
 }

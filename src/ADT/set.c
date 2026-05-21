@@ -1,4 +1,4 @@
-#include "../../header/set.h"
+#include "set.h"
 
 void CreateWeb(WebPages *W){
     W->NEff = 0;

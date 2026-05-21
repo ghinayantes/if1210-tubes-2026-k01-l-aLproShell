@@ -1,4 +1,5 @@
-#include "../../header/search.h"
+#include "search.h"
+#include "set.h"
 
 void badChar(char* s, int len, int bc[]){
     for (int i = 0; i < 256; i++)
@@ -52,7 +53,6 @@ void boyerMoore(char* s, WebPages W){
     for (int idx = 0; idx < W.NEff; idx++)
     {
         char* contentext[2] = { W.buffer[idx].web_url, W.buffer[idx].content };
-        char* labels[2]  = { "url", "content" };
 
         for (int t = 0; t < 2; t++) {
             char* text = contentext[t];

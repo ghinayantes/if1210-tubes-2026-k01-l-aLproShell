@@ -2,8 +2,9 @@
 #define SAVELOAD_H
 
 #include "set.h" 
+#include "boolean.h"
 
-void LoadFromCSV(WebPages *W, char *f);
-void SaveToCSV(WebPages W, char *f);
+boolean LoadFromCSV(WebPages *W, const char *filepath);
+boolean SaveToCSV(WebPages W, const char *filepath);
 
 #endif
