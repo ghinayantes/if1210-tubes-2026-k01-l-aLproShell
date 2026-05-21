@@ -4,7 +4,6 @@
 #include <stdio.h>
 #include <string.h>
 
-
 #include "boolean.h"
 
 typedef struct {

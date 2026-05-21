@@ -15,5 +15,6 @@
 
 #include "search.h"
 #include "openpage.h"
+#include "history.h"
 
 #endif
