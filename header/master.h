@@ -17,4 +17,6 @@
 #include "openpage.h"
 #include "history.h"
 
+#include "openlinked.h"
+
 #endif
