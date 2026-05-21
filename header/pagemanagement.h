@@ -5,7 +5,7 @@
 #include <string.h>
 #include "set.h"
 
-void runAddPage(WebPages *W);
-void runDeletePage(WebPages *W);
+void runAddPage(WebPages *W, char* s);
+void runDeletePage(WebPages *W, char* s);
 
 #endif
