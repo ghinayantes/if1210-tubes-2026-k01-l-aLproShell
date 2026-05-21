@@ -2,6 +2,9 @@
 #include <stdio.h>
 #include "master.h"
 
+int current_page = -1;
+int linked_count = 0;
+
 static void loadAgain(const char *path, char *out) {
     char temp[1024]; 
     memset(temp, 0, sizeof(temp));
