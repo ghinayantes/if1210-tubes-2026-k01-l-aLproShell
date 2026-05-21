@@ -44,6 +44,7 @@ void back(Page *P, int langkah);
 void forward(Page *P, int langkah);
 
 void viewTabHistory(Page P);
+void viewTabHistory(Page *P);
 
 
 

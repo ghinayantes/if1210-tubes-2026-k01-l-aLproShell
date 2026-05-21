@@ -91,17 +91,24 @@ void forward(Page *P, int langkah){
 
 void viewTabHistory(Page P){
     if (P.Empty){
+void viewTabHistory(Page *P){
+    if (P->Empty){
         printf("Anda belum membuka tab manapun\n");
     } else {
         int number = 0;
         for(int i = 0; i <= P.backHistory.idxTop; i++){
             printf("[%d] %s\n", number, P.backHistory.buffer[i].url); 
+        for(int i = 0; i <= P->backHistory.idxTop; i++){
+            printf("[%d] %s\n", number, P->backHistory.buffer[i].url); 
             number++;
         }
         printf("[%d] %s <- YOU ARE HERE\n", number, P.currentTab.url);
+        printf("[%d] %s <- YOU ARE HERE\n", number, P->currentTab.url);
         number++;
         for(int i = P.forwardHistory.idxTop; i >= 0; i--){
             printf("[%d] %s\n", number, P.forwardHistory.buffer[i].url); 
+        for(int i = P->forwardHistory.idxTop; i >= 0; i--){
+            printf("[%d] %s\n", number, P->forwardHistory.buffer[i].url); 
             number++;
         }
     }
