@@ -6,5 +6,7 @@
 
 boolean LoadFromCSV(WebPages *W, const char *filepath);
 boolean SaveToCSV(WebPages W, const char *filepath);
+void loadAgain(const char *path, char *out);
+boolean loadData(WebPages *W);
 
 #endif
