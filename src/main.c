@@ -191,6 +191,18 @@ int main() {
             if(isWebsiteValid(url)) runDeletePage(&W, url);
             else printf("Format domain tidak valid, tolong tulis domain kembali");
         }
+        
+        else if (strcmp(command, "editpage") == 0) {
+            char url[100];
+            scanf("%s", url);
+
+            if(isWebsiteValid(url)) {
+                runEditPage(&W, url);
+            } 
+            else {
+                printf("Format domain tidak valid, tolong tulis domain kembali"); 
+            }  
+        }
 
         else if (strcmp(command, "load") == 0) {
             char path[256];

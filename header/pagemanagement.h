@@ -7,5 +7,6 @@
 
 void runAddPage(WebPages *W, char* s);
 void runDeletePage(WebPages *W, char* s);
+void runEditPage(WebPages *W, char* s);
 
 #endif
