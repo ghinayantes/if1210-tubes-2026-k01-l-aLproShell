@@ -3,7 +3,8 @@
 #include "master.h"
 
 void printBanner() {
-    printf("█████████   ████                                █████████  █████               ████  ████ \n");
+    printf("\033[1;36m");
+    printf("   █████████   ████                                █████████  █████               ████  ████ \n");
     printf("  ███░░░░░███ ░░███                               ███░░░░░███░░███               ░░███ ░░███ \n");
     printf(" ░███    ░███  ░███  ████████  ████████   ██████ ░███    ░░░  ░███████    ██████  ░███  ░███ \n");
     printf(" ░███████████  ░███ ░░███░░███░░███░░███ ███░░███░░█████████  ░███░░███  ███░░███ ░███  ░███ \n");
@@ -14,9 +15,26 @@ void printBanner() {
     printf("                     ░███                                                                    \n");
     printf("                     █████                                                                   \n");
     printf("                    ░░░░░                                                                    \n");
+    printf("\033[0m");
+}
+
+void printMenu() {
+    printf("\n");
+    printf("\033[1;36m  ██ AlproShell Commands \033[0m\n");
+    printf("\033[0;90m  ┌────────────────────────────┬─────────────────────────────┐\033[0m\n");
+    printf("  │  [1]  discover             │  [9]  download <url>        │\n");
+    printf("  │  [2]  open <url>           │  [10] viewhistory           │\n");
+    printf("  │  [3]  search <str>         │  [11] back                  │\n");
+    printf("  │  [4]  newtab               │  [12] forward               │\n");
+    printf("  │  [5]  checktab             │  [13] add_page              │\n");
+    printf("  │  [6]  prevtab <x>          │  [14] delete_page           │\n");
+    printf("  │  [7]  nexttab <x>          │  [15] load <dir/>            │\n");
+    printf("  │  [8]  closetab             │  [16] save <dir/>            │\n");
+    printf("\033[0;90m  └────────────────────────────┴─────────────────────────────┘\033[0m\n");
 }
 
 int main() {
+    // INIT ALL VARIABLE THAT ARE NEEDED
     int tab;
     WebPages W;
     Map M;
@@ -27,78 +45,84 @@ int main() {
     CreateMap(&M);
     tabsListInit(&TL);
     DownloadQueueInit(&DQ);
+    loadData(&W);
+    
+    // TO SEE IF THE DATABASE ACTUALLY LOADED
+    // if(loadData(&W)) printf("\n%d Website dari database telah di-load otomatis...\n", W.NEff);
     
     printBanner();
-
-    if(loadData(&W)){
-        printf("\n%d Website dari database telah di-load otomatis...\n", W.NEff);
-    }
+    printf("\nSelamat datang di AlproShell! Berikut adalah beberapa command yang bisa digunakan.\nGunakan \033[1mhelp\033[0m jika ingin melihat kembali command yang tersedia.\n");
+    printMenu();
 
     while(true){
-        printf("\nSelamat datang di website Nagor Falls, silakan gunakan semua alat dibawah ini sebelum Anda mengidap penyakit nangor gila\n");
-        printf("[1] open\n");
-        printf("[2] search\n");
-        printf("[3] newtab\n");
-        printf("[4] checktab\n");
-        printf("[5] prevtab\n");
-        printf("[6] nexttab\n");
-        printf("[7] closetab\n");
-        printf("[8] download\n");
-        printf("[9] viewhistory\n");
-        printf("[10] back\n");
-        printf("[11] forward\n");
-        printf("[12] discover\n");
-        printf("[13] addpage\n");
-        printf("[14] deletepage\n");
-
-        printf("\n>>");
+        printf("\n>> ");
         char command[100];
         scanf("%s", command);
+
+        // else if (strcmp(command, "discover") == 0) {
+        //     runDiscover(&W, &discover_seed);
+        // }
 
         if (strcmp(command, "open") == 0) {
             char url[100];
             scanf("%s", url);
-
-            if(isWebsiteValid(url)) openpage(url, &W, &M, &TL);
-            else printf("Format domain tidak valid, tolong tulis domain kembali");
+            printf("\n");
+            if(isWebsiteValid(url)) {
+                printf("\033[1;36m  ██ Available Commands \033[0m\n");
+                printf("  Jika ingin mengakses linked pages yang tersedia, gunakan \033[1mopenlinked <x>\033[0m\n");
+                printf("\n");
+                openpage(url, &W, &M, &TL);
+            }
+            else printf("Masukan tidak valid.");
         }
 
         else if (strcmp(command, "search") == 0) {
             char url[100];
             scanf("%s", url);
+            printf("Search result(s) for %s :\n", url);
 
             boyerMoore(url, W);
-        }
-
-        else if (strcmp(command, "checktab") == 0) {
-            checkTab(&TL);
         }
 
         else if (strcmp(command, "newtab") == 0) {
             newTab(&TL);
         }
 
-        else if (strcmp(command, "closetab") == 0) {
-            closeTab(&TL);
+        else if (strcmp(command, "checktab") == 0) {
+            checkTab(&TL);
+        }
+
+        else if (strcmp(command, "prevtab") == 0) {
+            scanf("%d", &tab);
+            prevTab(&TL, tab);
         }
 
         else if (strcmp(command, "nexttab") == 0) {
             scanf("%d", &tab);
-
             nextTab(&TL, tab);
         }
 
-        else if (strcmp(command, "prevtab") == 0) {
-            
-            scanf("%d", &tab);
-
-            prevTab(&TL, tab);
+        else if (strcmp(command, "closetab") == 0) {
+            closeTab(&TL);
         }
 
         else if (strcmp(command, "download") == 0) {
             char url[100];
             scanf("%s", url);
-            if(isWebsiteValid(url)) DownloadQueueDownload(&DQ, url);
+            if(isWebsiteValid(url)) {
+                printf("\n\033[1;36m  ██ Available Commands \033[0m\n");
+                printf("  Untuk menambah progress download suatu website, gunakan \033[1mtick\033[0m\n\n");
+                DownloadQueueDownload(&DQ, url);
+            }
+        }
+
+        else if (strcmp(command, "tick") == 0) {
+            DownloadTick(&DQ);
+        }
+        
+        else if (strcmp(command, "viewhistory") == 0) {
+            int aktif = TL.currentIdx;
+            viewTabHistory(&(TL.tabs[aktif].tabHistory));
         }
 
         else if (strcmp(command, "back") == 0) {
@@ -145,19 +169,6 @@ int main() {
             }
         }
 
-        else if (strcmp(command, "viewhistory") == 0) {
-            int aktif = TL.currentIdx;
-            viewTabHistory(&(TL.tabs[aktif].tabHistory));
-        }
-
-        else if (strcmp(command, "tick") == 0) {
-            DownloadTick(&DQ);
-        }
-
-        // else if (strcmp(command, "discover") == 0) {
-        //     runDiscover(&W, &discover_seed);
-        // }
-
         else if (strcmp(command, "add_page") == 0) {
             char url[100];
             scanf("%s", url);
@@ -191,13 +202,27 @@ int main() {
             if(LoadFromCSV(&W, database)){
                 DestroyMap(&M);
                 CreateMap(&M);
-                printf("%d Website dari database telah di-load ulang...\n", W.NEff);            
+                printf("%d Website dari database telah di-load ulang...\n\n", W.NEff); 
+                printBanner();
+                printf("\nSelamat datang di AlproShell! Berikut adalah beberapa command yang bisa digunakan.\nGunakan \033[1mhelp\033[0m jika ingin melihat kembali command yang tersedia.\n");
+                printMenu();           
             } 
             else{
                 printf("Gagal me-load website dari %s\n", database);
             }
         }
 
+        else if (strcmp(command, "save") == 0) {
+            char path[256];
+            scanf("%s", path); 
+
+            int len = strlen(path);
+            if (len > 0 && path[len - 1] != '/') {
+                strcat(path, "/");
+            }
+
+            if(SaveToCSV(W, path));
+        }
     }
     
     return 0;
