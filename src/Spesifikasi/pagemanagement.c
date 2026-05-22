@@ -8,7 +8,6 @@ void runAddPage(WebPages *W, char* s) {
 
     char content[10000];
 
-    // --- BAGIAN INI SAJA YANG DIUBAH BIAR BISA BACA SAMPAI TITIK '.' ---
     printf("Masukkan Konten (akhiri dengan '.' lalu Enter): ");
     int i = 0;
     char temp_char;
@@ -22,7 +21,6 @@ void runAddPage(WebPages *W, char* s) {
     }
     content[i] = '\0';
     while ((c = getchar()) != '\n' && c != EOF);
-    // ------------------------------------------------------------------
 
     int new_id = 1;
     if (!isEmptyWeb(*W)) {
@@ -55,7 +53,6 @@ void runDeletePage(WebPages *W, char* s) {
     }
 }
 
-// --- INI FITUR BARU YANG DITAMBAHKAN DI PALING BAWAH ---
 void runEditPage(WebPages *W, char* s) {
     if (isEmptyWeb(*W)) {
         printf("[ERROR] Database website kosong!\n");
