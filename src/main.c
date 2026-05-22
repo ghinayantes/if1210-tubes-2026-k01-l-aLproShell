@@ -28,8 +28,8 @@ void printMenu() {
     printf("  │  [4]  newtab               │  [12] forward               │\n");
     printf("  │  [5]  checktab             │  [13] add_page              │\n");
     printf("  │  [6]  prevtab <x>          │  [14] delete_page           │\n");
-    printf("  │  [7]  nexttab <x>          │  [15] load <dir/>            │\n");
-    printf("  │  [8]  closetab             │  [16] save <dir/>            │\n");
+    printf("  │  [7]  nexttab <x>          │  [15] load <dir/>           │\n");
+    printf("  │  [8]  closetab             │  [16] save <dir/>           │\n");
     printf("\033[0;90m  └────────────────────────────┴─────────────────────────────┘\033[0m\n");
 }
 
@@ -222,6 +222,10 @@ int main() {
             }
 
             if(SaveToCSV(W, path));
+        }
+
+        else if (strcmp(command, "help") == 0) {
+            printMenu();
         }
     }
     
