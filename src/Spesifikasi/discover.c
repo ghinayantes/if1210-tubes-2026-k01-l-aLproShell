@@ -14,7 +14,7 @@ void runDiscover(WebPages *W, unsigned int *seed) {
         return;
     }
 
-    printf("\n=== DISCOVER WEBSITES ===\n");
+    printf("\n─────────── DISCOVER WEBSITES ───────────\n");
     unsigned int temp_seed = *seed;
     int count = 0;
     int picked[5] = {-1, -1, -1, -1, -1}; 
@@ -35,11 +35,11 @@ void runDiscover(WebPages *W, unsigned int *seed) {
         
         if (!is_duplicate) {
             picked[count] = target_index;
-            printf("%d. ID: %d | URL: %s\n", count + 1, W->buffer[target_index].id, W->buffer[target_index].web_url);
+            printf("- %s\n", W->buffer[target_index].web_url);
             count++;
         }
     }
     
     *seed = temp_seed; // Simpan seed terakhir
-    printf("=========================\n\n");
+    printf("─────────────────────────────────────────\n");
 }
