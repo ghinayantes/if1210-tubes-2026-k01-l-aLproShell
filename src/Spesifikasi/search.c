@@ -50,6 +50,8 @@ void boyerMoore(char* s, WebPages W){
     badChar(s, m, bc);
     goodSuffix(s, m, shift, border);
 
+    int count = 0;
+
     for (int idx = 0; idx < W.NEff; idx++)
     {
         char* contentext[2] = { W.buffer[idx].web_url, W.buffer[idx].content };
@@ -72,6 +74,7 @@ void boyerMoore(char* s, WebPages W){
                 if (j < 0) {
                     printf("[%d] %s\n", idx+1,contentext[0]);
                     found = true;
+                    count++;
                     break;
 
                     i += shift[0];
@@ -91,4 +94,5 @@ void boyerMoore(char* s, WebPages W){
             if(found) break;
         }
     }
+    if(!count) printf("-\n");
 }

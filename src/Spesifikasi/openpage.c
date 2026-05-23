@@ -16,7 +16,7 @@ void printReal(char *str){
 void openpage(char* s, WebPages *W, Map *M, TabsList *TL){
     char* val = getMap(s, M);
     if (val != NULL) {
-        printf("[Status: Cache-Hit] Mengambil data dari cache...\n");
+        printf("[Status: Cache-Hit] Mengambil data dari cache...\n\n");
         printReal(val);
         printf("\n");
 
@@ -26,7 +26,7 @@ void openpage(char* s, WebPages *W, Map *M, TabsList *TL){
         bukaHalaman(&(TL->tabs[aktif].tabHistory), webBaru);
     } 
     else {
-        printf("[Status: Cache-Miss] Mengambil data dari database...\n");
+        printf("[Status: Cache-Miss] Mengambil data dari database...\n\n");
         val = getWeb(s, W);
         if (val != NULL) {
             printReal(val);

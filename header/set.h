@@ -9,7 +9,7 @@
 typedef struct {
     int id;
     char web_url[100];
-    char content[1000];
+    char content[10000];
 } Web;
 
 typedef struct {
