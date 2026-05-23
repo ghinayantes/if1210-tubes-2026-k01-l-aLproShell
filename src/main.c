@@ -36,8 +36,8 @@ void printMenu() {
 
 int main() {
     int tab;
-    static WebPages W;
-    static Map M;
+    WebPages W;
+    Map M;
     unsigned int discover_seed = 12345;
     TabsList TL;
     DownloadQueue DQ;
