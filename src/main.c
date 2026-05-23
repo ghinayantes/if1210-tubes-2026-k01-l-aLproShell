@@ -2,52 +2,6 @@
 #include <stdio.h>
 #include "master.h"
 
-<<<<<<< HEAD
-int current_page = -1;
-int linked_count = 0;
-
-static void loadAgain(const char *path, char *out) {
-    char temp[1024]; 
-    memset(temp, 0, sizeof(temp));
-
-    if (path == NULL || strlen(path) == 0) {
-        strcpy(out, "config/data.csv");
-        return;
-    }    
-    strcpy(temp, path);
-    int len = strlen(temp);
-
-    while (len > 0 && temp[len - 1] == '/') {
-        temp[len - 1] = '\0';
-        len--;
-    }
-
-    if (len == 0) {
-        strcpy(out, "config/data.csv");
-        return;
-    }
-
-    if (len >= 4 && temp[len - 4] == '.' && temp[len - 3] == 'c' && temp[len - 2] == 's' && temp[len - 1] == 'v') {
-        strcpy(out, temp);
-        return;
-    }
-
-    strcpy(out, temp);
-    strcat(out, "/data.csv");
-}
-
-static boolean loadData(WebPages *W) {
-    if (LoadFromCSV(W, "config/data.csv")) return true;
-    return false;
-}
-
-static boolean loadLinks(WebPages *W) {
-    if (LoadLinkedPages(W, "config/linked_pages.csv")) return true;
-    return false;
-}
-
-=======
->>>>>>> 37a464ad8cca053a0f7cb3cfeda8f37a9c0ee8eb
 void printBanner() {
     printf("\033[1;36m");
     printf("   █████████   ████                                █████████  █████               ████  ████ \n");
@@ -76,14 +30,14 @@ void printMenu() {
     printf("  │  [6]  prevtab <x>          │  [15] edit_page             │\n");
     printf("  │  [7]  nexttab <x>          │  [16] load <dir/>           │\n");
     printf("  │  [8]  closetab             │  [17] save <dir/>           │\n");
-    printf("  │  [9]  download <url>       │                             │\n");
+    printf("  │  [9]  download <url>       │  [18] exit                  │\n");
     printf("\033[0;90m  └────────────────────────────┴─────────────────────────────┘\033[0m\n");
 }
 
 int main() {
     int tab;
-    WebPages W;
-    Map M;
+    static WebPages W;
+    static Map M;
     unsigned int discover_seed = 12345;
     TabsList TL;
     DownloadQueue DQ;
@@ -92,26 +46,14 @@ int main() {
     tabsListInit(&TL);
     DownloadQueueInit(&DQ);
     loadData(&W);
+    LoadLinkedPages(&W, "config/linked_pages.csv");
 
-<<<<<<< HEAD
-    if(loadData(&W)){
-        printf("\n%d Website dari database telah di-load otomatis...\n", W.NEff);
-        if(loadLinks(&W)) {
-            printf("Hubungan antar halaman (links) berhasil dimuat.\n");
-        } else {
-            printf("Peringatan: File struktur link tidak ditemukan atau gagal dimuat.\n");
-        }
-    } else {
-        printf("Gagal memuat database website utama (data.csv).\n");
-    }
-=======
     // TO SEE IF THE DATABASE ACTUALLY LOADED
     // if(loadData(&W)) printf("\n%d Website dari database telah di-load otomatis...\n", W.NEff);
 
     printBanner();
     printf("\nSelamat datang di AlproShell! Berikut adalah beberapa command yang bisa digunakan.\nGunakan \033[1mhelp\033[0m jika ingin melihat kembali command yang tersedia.\n");
     printMenu();
->>>>>>> 37a464ad8cca053a0f7cb3cfeda8f37a9c0ee8eb
 
     while(true){
         printf("\n>> ");
@@ -131,9 +73,15 @@ int main() {
                 printf("\033[1;36m  ██ Available Commands \033[0m\n");
                 printf("  Jika ingin mengakses linked pages yang tersedia, gunakan \033[1mopenlinked <x>\033[0m\n");
                 printf("\n");
-                openpage(url, &W, &M, &TL);
+                cmd_open(url, &W, &M, &TL);
             }
             else printf("Format domain tidak valid, tolong tulis domain kembali.");
+        }
+
+        else if (strcmp(command, "openlinked") == 0) {
+            int x;
+            scanf("%d", &x);
+            openLinked(x, &W);
         }
 
         else if (strcmp(command, "search") == 0) {
@@ -292,11 +240,23 @@ int main() {
                 strcat(path, "/");
             }
 
-            if(SaveToCSV(W, path));
+            if(SaveToCSV(W, path)) {
+                printf("Data berhasil disimpan ke %s\n", path);
+            } else {
+                printf("Gagal menyimpan data.\n");
+            }
         }
 
         else if (strcmp(command, "help") == 0) {
             printMenu();
+        }
+
+        else if (strcmp(command, "exit") == 0) {
+            char path[256];
+            printf("Please input the save folder (or press Enter to skip): ");
+            scanf("%s", path);
+            exitProgram(&W, path);
+            break;
         }
     }
     
