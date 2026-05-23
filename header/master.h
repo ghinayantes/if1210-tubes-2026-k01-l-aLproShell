@@ -23,5 +23,6 @@
 #include "pagemanagement.h"
 
 #include "openlinked.h"
+#include "exit.h"
 
 #endif
