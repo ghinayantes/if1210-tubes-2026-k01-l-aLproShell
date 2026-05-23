@@ -15,7 +15,7 @@ boolean LoadLinkedPages(WebPages *W, const char *filepath);
 void displayLinkedPages(WebPages *W, int idx);
 void displayPage(WebPages *W, int idx);
 
-void cmd_open(char *web_url, WebPages *W, Map *M);
+void cmd_open(char *web_url, WebPages *W, Map *M, TabsList *TL);
 void openLinked(int x, WebPages *W);
 
 #endif

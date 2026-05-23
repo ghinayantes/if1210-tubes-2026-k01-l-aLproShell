@@ -54,7 +54,7 @@ void displayPage(WebPages *W, int idx) {
 
 
 
-void cmd_open(char *web_url, WebPages *W, Map *M) {
+void cmd_open(char *web_url, WebPages *W, Map *M, TabsList *TL) {
     int idx = findUrl(W, web_url);
     if (idx == -1) {
         printf("ERROR: HALAMAN '%s' TIDAK DITEMUKAN!\n", web_url);
@@ -62,7 +62,7 @@ void cmd_open(char *web_url, WebPages *W, Map *M) {
     } 
     current_page = idx;
     linked_count = 0;
-    openpage(web_url, W,M);
+    openpage(web_url, W,M, TL);
     displayLinkedPages(W, idx);
 }
 
