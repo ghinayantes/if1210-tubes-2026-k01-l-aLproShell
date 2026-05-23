@@ -3,6 +3,11 @@
 #include <string.h>
 #include <stdlib.h>
 
+int adj[100][100];
+int current_page = -1;
+int linked_count = 0;
+int linked_buf[100];
+
 
 int findUrl(WebPages *W, char *web_url) {
     for (int i = 0; i < W->NEff; i++)
