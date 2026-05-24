@@ -6,6 +6,9 @@
 
 extern int adj[100][100];
 
+void deleteAdj(int del_idx, int NEff);
+boolean SaveLinkedPages(WebPages *W, const char *filepath);
+
 int findUrl(WebPages *W, char *web_url);
 int findId(WebPages *W, int id);
 boolean LoadLinkedPages(WebPages *W, const char *filepath);

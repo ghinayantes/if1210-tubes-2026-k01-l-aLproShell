@@ -6,6 +6,44 @@
 int adj[100][100]; /*MATRIX YEAH CRAB RAVE*/
 
 
+void deleteAdj(int del_idx, int NEff) {
+    /*geser baris*/
+    for (int i = del_idx; i < NEff - 1; i++) {
+        for (int j = 0; j < 100; j++) {
+            adj[i][j] = adj[i + 1][j];
+        }
+    }
+    /*geser kolom*/
+    for (int i = 0; i < 100; i++) {
+        for (int j = del_idx; j < NEff - 1; j++) {
+            adj[i][j] = adj[i][j + 1];
+        }
+    }
+    for (int i = 0; i < 100; i++) {
+        adj[NEff - 1][i] = 0;
+        adj[i][NEff - 1] = 0;
+    }
+}
+
+boolean SaveLinkedPages(WebPages *W, const char *filepath) {
+    FILE *f = fopen(filepath, "w");
+    if (!f) return false;
+
+    fprintf(f, "id,id_sumber,id_tujuan\n");
+    int link_id = 1;
+    for (int i = 0; i < W->NEff; i++) {
+        for (int j = 0; j < W->NEff; j++) {
+            if (adj[i][j] == 1) {
+                int src_id = W->buffer[i].id;
+                int dst_id = W->buffer[j].id;
+                fprintf(f, "%d,%d,%d\n", link_id, src_id, dst_id);
+                link_id++;
+            }
+        }
+    }
+    fclose(f);
+    return true;
+}
 
 int findUrl(WebPages *W, char *web_url) {
     for (int i = 0; i < W->NEff; i++)
