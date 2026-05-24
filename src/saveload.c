@@ -32,12 +32,12 @@ boolean LoadFromCSV(WebPages *W, const char *path) {
         for (int f = 0; f < 2 && valid; f++) {
             if(*p != ',' || *(p+1) != '"'){ 
                 valid = false; 
-                break; 
             }
             p += 2;
 
             int i = 0;
-            while(*p){
+            boolean done = false;
+            while(*p && !done){
                 if(*p == '"'){
                     if(*(p+1) == '"'){        
                         if (i < size[f] - 1) data[f][i++] = '"';
@@ -45,7 +45,7 @@ boolean LoadFromCSV(WebPages *W, const char *path) {
                     } 
                     else{     
                         p++;
-                        break;
+                        done = true;
                     }
                 }
                 else{

@@ -38,10 +38,9 @@ void runDeletePage(WebPages *W, char* s) {
     }
 
     int target_id = -1;
-    for (int i = 0; i < W->NEff; i++) {
+    for (int i = 0; i < W->NEff && target_id == -1; i++) {
         if (strcmp(W->buffer[i].web_url, s) == 0) {
             target_id = W->buffer[i].id;
-            break;
         }
     }
 
@@ -60,10 +59,9 @@ void runEditPage(WebPages *W, char* s) {
     }
 
     int target_idx = -1;
-    for (int i = 0; i < W->NEff; i++) {
+    for (int i = 0; i < W->NEff && target_idx == -1; i++) {
         if (strcmp(W->buffer[i].web_url, s) == 0) {
             target_idx = i;
-            break;
         }
     }
 
