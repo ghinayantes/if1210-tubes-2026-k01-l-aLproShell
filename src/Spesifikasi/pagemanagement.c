@@ -31,16 +31,17 @@ void runAddPage(WebPages *W, char* s) {
     printf("[SUCCESS] Halaman %s berhasil ditambahkan!\n", s);
 }
 
-void runDeletePage(WebPages *W, char* s) {
+void runDeletePage(WebPages *W, Map *M, char* s) {
     if (isEmptyWeb(*W)) {
         printf("[ERROR] Database website kosong!\n");
         return;
     }
 
     int target_id = -1;
-    for (int i = 0; i < W->NEff && target_id == -1; i++) {
+    for (int i = 0; i < W->NEff; i++) {
         if (strcmp(W->buffer[i].web_url, s) == 0) {
             target_id = W->buffer[i].id;
+            break;
         }
     }
 
@@ -48,20 +49,24 @@ void runDeletePage(WebPages *W, char* s) {
         printf("[ERROR] URL %s tidak ditemukan di database!\n", s);
     } else {
         RemoveWeb(W, target_id);
+        
+        unsetMap(s, M);
+        
         printf("[SUCCESS] Halaman %s berhasil dihapus!\n", s);
     }
 }
 
-void runEditPage(WebPages *W, char* s) {
+void runEditPage(WebPages *W, Map *M, char* s) {
     if (isEmptyWeb(*W)) {
         printf("[ERROR] Database website kosong!\n");
         return;
     }
 
     int target_idx = -1;
-    for (int i = 0; i < W->NEff && target_idx == -1; i++) {
+    for (int i = 0; i < W->NEff; i++) {
         if (strcmp(W->buffer[i].web_url, s) == 0) {
             target_idx = i;
+            break;
         }
     }
 
@@ -87,5 +92,8 @@ void runEditPage(WebPages *W, char* s) {
     while ((c = getchar()) != '\n' && c != EOF);
 
     strcpy(W->buffer[target_idx].content, content);
+    
+    setMap(s, content, M);
+    
     printf("[SUCCESS] Halaman %s berhasil diedit!\n", s);
 }

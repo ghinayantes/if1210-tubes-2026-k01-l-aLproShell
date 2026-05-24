@@ -206,7 +206,7 @@ int main() {
             scanf(" %s", url);
             flushInput();
 
-            if(isWebsiteValid(url)) runDeletePage(&W, url);
+            if(isWebsiteValid(url)) runDeletePage(&W, &M, url);
             else printf("Format domain tidak valid, tolong tulis domain kembali.");
         }
 
@@ -216,7 +216,7 @@ int main() {
             flushInput();
 
             if(isWebsiteValid(url)) {
-                runEditPage(&W, url);
+                runEditPage(&W, &M, url);
             } 
             else {
                 printf("Format domain tidak valid, tolong tulis domain kembali."); 
