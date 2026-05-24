@@ -14,6 +14,7 @@
 #include "stack.h"
 #include "regex.h"
 #include "list.h"
+#include "queue.h"
 
 #include "search.h"
 #include "openpage.h"
