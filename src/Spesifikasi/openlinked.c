@@ -3,10 +3,8 @@
 #include <string.h>
 #include <stdlib.h>
 
-int adj[100][100];
-int current_page = -1;
-int linked_count = 0;
-int linked_buf[100];
+int adj[100][100]; /*MATRIX YEAH CRAB RAVE*/
+
 
 
 int findUrl(WebPages *W, char *web_url) {
@@ -27,27 +25,35 @@ boolean LoadLinkedPages(WebPages *W, const char *filepath) {
     if (!f) return false;
     memset(adj, 0, sizeof(adj));
     char line[100];
+
+    
     fgets(line, sizeof(line), f); /* skip header */
     while (fgets(line, sizeof(line), f)) {
         int id, src_id, dst_id;
         if (sscanf(line, "%d,%d,%d", &id, &src_id, &dst_id) == 3) {
             int s = findId(W, src_id);
             int d = findId(W, dst_id);
-            if (s != -1 && d != -1) adj[s][d] = 1;
+            if (s != -1 && d != -1) {
+                if (s< 100 && d <100) {
+                    adj[s][d] = 1;
+                } else {
+                    printf("Kapasitas sudah penuh!");
+                }
+            }
         }
     }
     fclose(f);
     return true;
 }
 
-void displayLinkedPages(WebPages *W, int idx) {
-    linked_count = 0;
-    for (int j = 0; j < W->NEff; j++)
-        if (adj[idx][j]) linked_buf[linked_count++] = j;
-    if (linked_count > 0) {
-        printf("Linked pages:\n");
-        for (int i = 0; i < linked_count; i++)
-            printf("[%d] %s\n", i + 1, W->buffer[linked_buf[i]].web_url);
+void displayLinkedPages(WebPages *W, int current_idx) {
+    int local_linked_count = 0;
+    for (int j = 0; j < W->NEff; j++) {
+        if (adj[current_idx][j]) {
+            if (local_linked_count == 0) printf("Linked pages:\n");
+            local_linked_count++;
+            printf("[%d] %s\n", local_linked_count, W->buffer[j].web_url);
+        }
     }
 }
 
@@ -65,27 +71,38 @@ void cmd_open(char *web_url, WebPages *W, Map *M, TabsList *TL) {
         printf("ERROR: HALAMAN '%s' TIDAK DITEMUKAN!\n", web_url);
         return;
     } 
-    current_page = idx;
-    linked_count = 0;
     openpage(web_url, W,M, TL);
     displayLinkedPages(W, idx);
 }
 
-void openLinked(int x, WebPages *W) {
-    if (current_page == -1) {
-        printf("ERROR: COMMAND HANYA DAPAT DIGUNAKAN SAAT HALAMAN WEB TERBUKA!\n");
+void openLinked(int x, WebPages *W, Map *M, TabsList *TL) {
+    int aktif = TL->currentIdx;
+    if (TL->tabs[aktif].tabHistory.Empty) {
+        printf("ERROR: TIDAK ADA HALAMAN YANG SEDANG TERBUKA DI TAB INI!\n");
         return;
     }
-    if (linked_count == 0) {
-        printf("ERROR: HALAMAN TIDAK MEMILIKI TAUTAN YANG BISA DIBUKA!\n");
-        displayPage(W, current_page);
+    char *active_url = TL->tabs[aktif].tabHistory.currentTab.url; 
+    int current_idx = findUrl(W, active_url);
+    if (current_idx == -1) {
+        printf("ERROR: HALAMAN SAAT INI TIDAK ADA DI DATABASE!\n");
         return;
     }
-    if (x < 1 || x > linked_count) {
-        printf("ERROR: INDEKS TIDAK VALID! (1 - %d)\n", linked_count);
+    int local_linked_count = 0;
+    int target_page_idx = -1;
+    int found = 0;
+    for (int j = 0; j < W->NEff && !found; j++) {
+        if (adj[current_idx][j]) { // adj is your adjacency matrix
+            local_linked_count++;
+            if (local_linked_count == x) {
+                target_page_idx = j;
+                found = 1;
+            }
+        }
+    }
+    if (target_page_idx == -1) {
+        printf("ERROR: INDEKS TIDAK VALID! (Hanya ada %d tautan)\n", local_linked_count);
         return;
     }
-    current_page = linked_buf[x - 1];
-    linked_count = 0;
-    displayPage(W, current_page);
+    char *target_url = W->buffer[target_page_idx].web_url;
+    cmd_open(target_url, W, M, TL);
 }

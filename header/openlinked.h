@@ -5,9 +5,6 @@
 #include "boolean.h"
 
 extern int adj[100][100];
-extern int current_page;
-extern int linked_count;
-extern int linked_buf[100];
 
 int findUrl(WebPages *W, char *web_url);
 int findId(WebPages *W, int id);
@@ -16,6 +13,6 @@ void displayLinkedPages(WebPages *W, int idx);
 void displayPage(WebPages *W, int idx);
 
 void cmd_open(char *web_url, WebPages *W, Map *M, TabsList *TL);
-void openLinked(int x, WebPages *W);
+void openLinked(int x, WebPages *W, Map *M, TabsList *TL);
 
 #endif
