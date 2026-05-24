@@ -2,6 +2,12 @@
 #include <stdio.h>
 #include "master.h"
 
+// Fungsi helper untuk membersihkan sisa input di buffer
+void flushInput() {
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
+}
+
 void printBanner() {
     printf("\033[1;36m");
     printf("   █████████   ████                                █████████  █████               ████  ████ \n");
@@ -30,7 +36,7 @@ void printMenu() {
     printf("  │  [6]  prevtab <x>          │  [15] edit_page             │\n");
     printf("  │  [7]  nexttab <x>          │  [16] load <dir/>           │\n");
     printf("  │  [8]  closetab             │  [17] save <dir/>           │\n");
-    printf("  │  [9]  download <url>       │                             │\n");
+    printf("  │  [9]  download <url>       │  [18] exit                  │\n");
     printf("\033[0;90m  └────────────────────────────┴─────────────────────────────┘\033[0m\n");
 }
 
@@ -47,9 +53,6 @@ int main() {
     DownloadQueueInit(&DQ);
     loadData(&W);
 
-    // TO SEE IF THE DATABASE ACTUALLY LOADED
-    // if(loadData(&W)) printf("\n%d Website dari database telah di-load otomatis...\n", W.NEff);
-
     printBanner();
     printf("\nSelamat datang di AlproShell! Berikut adalah beberapa command yang bisa digunakan.\nGunakan \033[1mhelp\033[0m jika ingin melihat kembali command yang tersedia.\n");
     printMenu();
@@ -57,15 +60,17 @@ int main() {
     while(true){
         printf("\n>> ");
         char command[100];
-        scanf("%s", command);
+        scanf(" %s", command);  // spasi di depan untuk skip newline sisa
 
         if (strcmp(command, "discover") == 0) {
+            flushInput();
             runDiscover(&W, &discover_seed);
         }
 
         else if (strcmp(command, "open") == 0) {
             char url[100];
-            scanf("%s", url);
+            scanf(" %s", url);
+            flushInput();
 
             printf("\n");
             if(isWebsiteValid(url)) {
@@ -79,36 +84,43 @@ int main() {
 
         else if (strcmp(command, "search") == 0) {
             char url[100];
-            scanf("%s", url);
+            scanf(" %s", url);
+            flushInput();
             printf("Search result(s) for %s :\n", url);
             boyerMoore(url, W);
         }
 
         else if (strcmp(command, "newtab") == 0) {
+            flushInput();
             newTab(&TL);
         }
 
         else if (strcmp(command, "checktab") == 0) {
+            flushInput();
             checkTab(&TL);
         }
 
         else if (strcmp(command, "prevtab") == 0) {
-            scanf("%d", &tab);
+            scanf(" %d", &tab);
+            flushInput();
             prevTab(&TL, tab);
         }
 
         else if (strcmp(command, "nexttab") == 0) {
-            scanf("%d", &tab);
+            scanf(" %d", &tab);
+            flushInput();
             nextTab(&TL, tab);
         }
 
         else if (strcmp(command, "closetab") == 0) {
+            flushInput();
             closeTab(&TL);
         }
 
         else if (strcmp(command, "download") == 0) {
             char url[100];
-            scanf("%s", url);
+            scanf(" %s", url);
+            flushInput();
             if(isWebsiteValid(url)) {
                 printf("\n\033[1;36m  ██ Available Commands \033[0m\n");
                 printf("  Untuk menambah progress download suatu website, gunakan \033[1mtick\033[0m\n\n");
@@ -117,17 +129,20 @@ int main() {
         }
 
         else if (strcmp(command, "tick") == 0) {
+            flushInput();
             DownloadTick(&DQ);
         }
 
         else if (strcmp(command, "viewhistory") == 0) {
+            flushInput();
             int aktif = TL.currentIdx;
             viewTabHistory(&(TL.tabs[aktif].tabHistory));
         }
 
         else if (strcmp(command, "back") == 0) {
             int langkah;
-            scanf("%d", &langkah);
+            scanf(" %d", &langkah);
+            flushInput();
             int aktif = TL.currentIdx;
             back(&(TL.tabs[aktif].tabHistory), langkah);
 
@@ -149,7 +164,8 @@ int main() {
 
         else if (strcmp(command, "forward") == 0) {
             int langkah;
-            scanf("%d", &langkah);
+            scanf(" %d", &langkah);
+            flushInput();
             int aktif = TL.currentIdx;
             forward(&(TL.tabs[aktif].tabHistory), langkah);
             
@@ -171,7 +187,8 @@ int main() {
 
         else if (strcmp(command, "add_page") == 0) {
             char url[100];
-            scanf("%s", url);
+            scanf(" %s", url);
+            flushInput();
 
             if(isWebsiteValid(url)){
                 if(!isUniqueWeb(W, url)){
@@ -186,7 +203,8 @@ int main() {
 
         else if (strcmp(command, "delete_page") == 0) {
             char url[100];
-            scanf("%s", url);
+            scanf(" %s", url);
+            flushInput();
 
             if(isWebsiteValid(url)) runDeletePage(&W, url);
             else printf("Format domain tidak valid, tolong tulis domain kembali.");
@@ -194,7 +212,8 @@ int main() {
 
         else if (strcmp(command, "edit_page") == 0) {
             char url[100];
-            scanf("%s", url);
+            scanf(" %s", url);
+            flushInput();
 
             if(isWebsiteValid(url)) {
                 runEditPage(&W, url);
@@ -206,7 +225,8 @@ int main() {
 
         else if (strcmp(command, "load") == 0) {
             char path[256];
-            scanf("%s", path);
+            scanf(" %s", path);
+            flushInput();
 
             char database[512];
             loadAgain(path, database);
@@ -226,18 +246,30 @@ int main() {
 
         else if (strcmp(command, "save") == 0) {
             char path[256];
-            scanf("%s", path); 
+            scanf(" %s", path);
+            flushInput();
 
             int len = strlen(path);
             if (len > 0 && path[len - 1] != '/') {
                 strcat(path, "/");
             }
 
-            if(SaveToCSV(W, path));
+            if(SaveToCSV(W, path)){}
         }
 
         else if (strcmp(command, "help") == 0) {
+            flushInput();
             printMenu();
+        }
+
+        else if (strcmp(command, "exit") == 0) {
+            printf("Sampai jumpa!\n");
+            return 0;
+        }
+
+        else {
+            flushInput();
+            printf("Command tidak dikenal: %s\n", command);
         }
     }
     
