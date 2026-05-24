@@ -13,6 +13,7 @@
 #include "download.h"
 #include "stack.h"
 #include "regex.h"
+#include "list.h"
 
 #include "search.h"
 #include "openpage.h"
