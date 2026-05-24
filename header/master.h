@@ -13,6 +13,8 @@
 #include "download.h"
 #include "stack.h"
 #include "regex.h"
+#include "list.h"
+#include "queue.h"
 
 #include "search.h"
 #include "openpage.h"
@@ -21,6 +23,7 @@
 #include "history.h"
 #include "discover.h"
 #include "pagemanagement.h"
+#include "exit.h"
 
 #include "openlinked.h"
 #include "exit.h"

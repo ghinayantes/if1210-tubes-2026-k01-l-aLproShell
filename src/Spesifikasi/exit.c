@@ -14,5 +14,5 @@ void exitProgram(WebPages *W, char *f) {
         SaveToCSV(*W, f);
     }
 
-    printf("Goodbye~\n");
+    printf("Selamat tinggal!\n");
 }

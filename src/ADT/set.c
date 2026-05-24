@@ -17,11 +17,12 @@ void AddWeb(WebPages *W, int id, char* url, char* content){
 
 void RemoveWeb(WebPages *W, int id){
     int idx = -1;
+    boolean found = false;
 
-    for (int i = 0; i < W->NEff; i++) {
+    for (int i = 0; i < W->NEff && !found; i++) {
         if (W->buffer[i].id == id) {
             idx = i;
-            break;
+            found = true;
         }
     }
     
