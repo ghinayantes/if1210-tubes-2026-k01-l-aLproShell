@@ -47,6 +47,7 @@ int main() {
     DownloadQueueInit(&DQ);
     loadData(&W);
     LoadLinkedPages(&W, "config/linked_pages.csv");
+    int running = 1;
 
     // TO SEE IF THE DATABASE ACTUALLY LOADED
     // if(loadData(&W)) printf("\n%d Website dari database telah di-load otomatis...\n", W.NEff);
@@ -55,7 +56,7 @@ int main() {
     printf("\nSelamat datang di AlproShell! Berikut adalah beberapa command yang bisa digunakan.\nGunakan \033[1mhelp\033[0m jika ingin melihat kembali command yang tersedia.\n");
     printMenu();
 
-    while(true){
+    while(running){
         printf("\n>> ");
         char command[100];
         scanf("%s", command);
@@ -81,7 +82,7 @@ int main() {
         else if (strcmp(command, "openlinked") == 0) {
             int x;
             scanf("%d", &x);
-            openLinked(x, &W);
+            openLinked(x, &W, &M, &TL);
         }
 
         else if (strcmp(command, "search") == 0) {
@@ -256,7 +257,7 @@ int main() {
             printf("Please input the save folder (or press Enter to skip): ");
             scanf("%s", path);
             exitProgram(&W, path);
-            break;
+            running = 0;
         }
     }
     
