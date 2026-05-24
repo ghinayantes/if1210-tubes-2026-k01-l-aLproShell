@@ -7,12 +7,18 @@ void exitProgram(WebPages *W, char *f) {
     scanf(" %c", &pilih);
 
     if (pilih == 'y' || pilih == 'Y') {
-
         printf("Please input the save folder\n");
         scanf("%s", f);
 
-        SaveToCSV(*W, f);
+        int len = strlen(f);
+        if (len>0 && f[len-1] != '/') {
+            strcat(f,"/");
+        }
+        if (SaveToCSV(*W, f)) {
+            printf("Data berhasil disimpan di %s!\n", f);
+        } else {
+            printf("Data gagal disimpan!!!\n");
+        }
     }
-
     printf("Selamat tinggal!\n");
 }
