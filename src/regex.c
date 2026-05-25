@@ -36,10 +36,11 @@ boolean isDomainValid(char* dom){
 boolean isWebsiteValid(char* s){
     int len = strlen(s); 
     int iDot = -1;
-    for(int i = 0; i < len; i++){
+    boolean found = false;
+    for(int i = 0; i < len && !found; i++){
         if(s[i] == '.'){
             iDot = i;
-            break;
+            found = true;
         }
     }
     if(iDot > 0){

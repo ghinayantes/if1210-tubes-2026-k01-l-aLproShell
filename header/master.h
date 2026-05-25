@@ -23,5 +23,9 @@
 #include "history.h"
 #include "discover.h"
 #include "pagemanagement.h"
+#include "exit.h"
+
+#include "openlinked.h"
+#include "exit.h"
 
 #endif
