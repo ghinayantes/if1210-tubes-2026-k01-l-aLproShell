@@ -27,17 +27,18 @@ void printBanner() {
 void printMenu() {
     printf("\n");
     printf("\033[1;36m  ██ AlproShell Commands \033[0m\n");
-    printf("\033[0;90m  ┌────────────────────────────┬─────────────────────────────┐\033[0m\n");
-    printf("  │  [1]  discover             │  [10] viewhistory           │\n");
-    printf("  │  [2]  open <url>           │  [11] back                  │\n");
-    printf("  │  [3]  search <str>         │  [12] forward               │\n");
-    printf("  │  [4]  newtab               │  [13] add_page              │\n");
-    printf("  │  [5]  checktab             │  [14] delete_page           │\n");
-    printf("  │  [6]  prevtab <x>          │  [15] edit_page             │\n");
-    printf("  │  [7]  nexttab <x>          │  [16] load <dir/>           │\n");
-    printf("  │  [8]  closetab             │  [17] save <dir/>           │\n");
-    printf("  │  [9]  download <url>       │  [18] exit                  │\n");
-    printf("\033[0;90m  └────────────────────────────┴─────────────────────────────┘\033[0m\n");
+    printf("\033[0;90m  ┌────────────────────────────────┬─────────────────────────────┐\033[0m\n");
+    printf("  │  [1]  discover                 │  [11] viewhistory           │\n");
+    printf("  │  [2]  open <url>               │  [12] back <x>              │\n");
+    printf("  │  [3]  search <str>             │  [13] forward <x>           │\n");
+    printf("  │  [4]  newtab                   │  [14] add_page              │\n");
+    printf("  │  [5]  checktab                 │  [15] delete_page           │\n");
+    printf("  │  [6]  prevtab <x>              │  [16] edit_page             │\n");
+    printf("  │  [7]  nexttab <x>              │  [17] load <dir/>           │\n");
+    printf("  │  [8]  closetab                 │  [18] save <dir/>           │\n");
+    printf("  │  [9]  download <url>           │  [19] exit                  │\n");
+    printf("  │  [10] viewglobalhistory        │                             │\n");
+    printf("\033[0;90m  └────────────────────────────────┴─────────────────────────────┘\033[0m\n");
 }
 
 int main() {
@@ -46,6 +47,7 @@ int main() {
     WebPages *W = (WebPages *)malloc(sizeof(WebPages));
     Map *M      = (Map *)malloc(sizeof(Map));
     TabsList *TL = (TabsList *)malloc(sizeof(TabsList));
+    GlobalHistory PQ;
     
     // Check if malloc succeeded
     if (W == NULL || M == NULL || TL == NULL) {
@@ -53,6 +55,7 @@ int main() {
         return 1;
     }
     DownloadQueue DQ;
+    CreateGlobalHistory(&PQ);
     CreateWeb(W);
     CreateMap(M);
     tabsListInit(TL);
@@ -87,7 +90,7 @@ int main() {
                 printf("\033[1;36m  ██ Available Commands \033[0m\n");
                 printf("  Jika ingin mengakses linked pages yang tersedia, gunakan \033[1mopenlinked <x>\033[0m\n");
                 printf("\n");
-                cmd_open(url, W, M, TL);
+                cmd_open(url, W, M, TL, &PQ);
             }
             else printf("Format domain tidak valid, tolong tulis domain kembali.");
         }
@@ -95,7 +98,7 @@ int main() {
         else if (strcmp(command, "openlinked") == 0) {
             int x;
             scanf("%d", &x);
-            openLinked(x, W, M, TL);
+            openLinked(x, W, M, TL, &PQ);
         }
 
         else if (strcmp(command, "search") == 0) {
@@ -175,6 +178,10 @@ int main() {
                         printf("\n");
                     }
                 }
+
+                UrlHistory page;
+                strcpy(page.url, urlSekarang);
+                EnqueueGlobal(&PQ, page);
             }
         }
 
@@ -198,6 +205,10 @@ int main() {
                         printf("\n");
                     }
                 }
+
+                UrlHistory page;
+                strcpy(page.url, urlSekarang);
+                EnqueueGlobal(&PQ, page);
             }
         }
 
@@ -278,6 +289,10 @@ int main() {
         else if (strcmp(command, "help") == 0) {
             flushInput();
             printMenu();
+        }
+
+        else if (strcmp(command, "viewglobalhistory") == 0) {
+            DisplayHistory(PQ);
         }
 
         else if (strcmp(command, "exit") == 0) {

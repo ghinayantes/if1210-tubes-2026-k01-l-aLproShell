@@ -7,9 +7,10 @@
 #include "set.h"
 #include "map.h"
 #include "tabs.h"
+#include "prioqueue.h"
 
 void printReal(char *str);
 
-void openpage(char* s, WebPages *W, Map *M, TabsList *TL);
+void openpage(char* s, WebPages *W, Map *M, TabsList *TL, GlobalHistory *PQ);
 
 #endif

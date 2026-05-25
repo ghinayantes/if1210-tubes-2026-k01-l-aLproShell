@@ -1,6 +1,7 @@
 #ifndef OPENLINKED_H
 #define OPENLINKED_H
 #include "openpage.h"
+#include "prioqueue.h"
 #include "set.h" 
 #include "boolean.h"
 
@@ -15,7 +16,7 @@ boolean LoadLinkedPages(WebPages *W, const char *filepath);
 void displayLinkedPages(WebPages *W, int idx);
 void displayPage(WebPages *W, int idx);
 
-void cmd_open(char *web_url, WebPages *W, Map *M, TabsList *TL);
-void openLinked(int x, WebPages *W, Map *M, TabsList *TL);
+void cmd_open(char *web_url, WebPages *W, Map *M, TabsList *TL, GlobalHistory *PQ);
+void openLinked(int x, WebPages *W, Map *M, TabsList *TL, GlobalHistory *PQ);
 
 #endif

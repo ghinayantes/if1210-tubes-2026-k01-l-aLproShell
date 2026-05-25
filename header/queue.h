@@ -2,9 +2,8 @@
 #define QUEUE_H
 
 #define DOWNLOAD_MAX_AMOUNT 5
-#define URL_MAX_LENGTH 256
 
-typedef char URL[URL_MAX_LENGTH];
+#include "url.h"
 
 typedef struct {
     URL url; 
