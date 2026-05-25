@@ -52,6 +52,63 @@ int DownloadCurrentTicksLeft(const DownloadQueue *dq) {
     return dq->items[dq->head].ticksLeft;
 }
 
+// Cari konten URL dari web_pages.csv
+// Mengisi buffer 'out' dengan konten jika URL ditemukan, atau string kosong jika tidak
+void LookupWebPageContent(const char *url, char *out, int outSize) {
+    out[0] = '\0';
+
+    FILE *csv = fopen("config/web_pages.csv", "r");
+    if (csv == NULL) return;
+
+    char line[2048];
+   
+    if (fgets(line, sizeof(line), csv) == NULL) {
+        fclose(csv);
+        return;
+    }
+
+    boolean found = false;
+
+    while (!found && fgets(line, sizeof(line), csv)) {
+        char *p = strchr(line, ',');
+        if (p == NULL) continue;
+        p++; 
+
+        if (*p == '"') p++;
+
+        char csvURL[URL_MAX_LENGTH];
+        int i = 0;
+        while (*p && *p != '"' && i < URL_MAX_LENGTH - 1) {
+            csvURL[i++] = *p++;
+        }
+        csvURL[i] = '\0';
+
+        if (strcmp(csvURL, url) != 0) continue;
+
+        if (*p == '"') p++;
+        if (*p == ',') p++;
+
+        // Ambil konten 
+        if (*p == '"') p++;
+
+        int j = 0;
+        while (*p && *p != '"' && *p != '\r' && *p != '\n' && j < outSize - 1) {
+            if (*p == '\\' && *(p+1) == 'n') {
+                out[j++] = '\n';
+                p += 2;
+            } else {
+                out[j++] = *p++;
+            }
+        }
+
+        while (j > 0 && (out[j-1] == '\n' || out[j-1] == '\r')) j--;
+        out[j] = '\0';
+        found = true;
+    }
+
+    fclose(csv);
+}
+
 // operasi utama
 boolean IsURLValid(const char *url) {
     int len = strlen(url);
@@ -148,9 +205,18 @@ boolean DownloadTick(DownloadQueue *dq) {
     char filename[URL_MAX_LENGTH + 4];
     snprintf(filename, sizeof(filename), "%s.txt", stripped);
  
+    char pageContent[4096];
+    LookupWebPageContent(finishedURL, pageContent, sizeof(pageContent));
+
     FILE *f = fopen(filename, "w");
     if (f != NULL) {
-        fprintf(f, "Konten halaman: %s\n", finishedURL);
+        if (pageContent[0] != '\0') {
+            // Konten ditemukan di CSV 
+            fprintf(f, "%s\n", pageContent);
+        } else {
+            // Konten tidak ditemukan 
+            fprintf(f, "Konten halaman: %s\n", finishedURL);
+        }
         fclose(f);
     }
  

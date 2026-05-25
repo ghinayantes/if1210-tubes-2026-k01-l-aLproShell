@@ -37,7 +37,6 @@ void printMenu() {
     printf("  │  [7]  nexttab <x>          │  [16] load <dir/>           │\n");
     printf("  │  [8]  closetab             │  [17] save <dir/>           │\n");
     printf("  │  [9]  download <url>       │  [18] exit                  │\n");
-    printf("  │  [9]  download <url>       │  [18] exit                  │\n");
     printf("\033[0;90m  └────────────────────────────┴─────────────────────────────┘\033[0m\n");
 }
 
@@ -72,6 +71,7 @@ int main() {
         printf("\n>> ");
         char command[100];
         scanf(" %s", command);
+    
         if (strcmp(command, "discover") == 0) {
             flushInput();
             runDiscover(W, &discover_seed);
