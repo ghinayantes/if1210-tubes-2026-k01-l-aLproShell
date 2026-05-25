@@ -168,11 +168,13 @@ int main() {
                 if (isiHalaman != NULL) {
                     printReal(isiHalaman); 
                     printf("\n");
+                    displayLinkedPages(W, aktif);
                 } else {
                     isiHalaman = getWeb(urlSekarang, W);
                     if (isiHalaman != NULL) {
                         printReal(isiHalaman);
                         printf("\n");
+                        displayLinkedPages(W, aktif);
                     }
                 }
             }
@@ -191,11 +193,13 @@ int main() {
                 if (isiHalaman != NULL) {
                     printReal(isiHalaman); 
                     printf("\n");
+                    displayLinkedPages(W, aktif);
                 } else {
                     isiHalaman = getWeb(urlSekarang, W);
                     if (isiHalaman != NULL) {
                         printReal(isiHalaman);
                         printf("\n");
+                        displayLinkedPages(W, aktif);
                     }
                 }
             }
