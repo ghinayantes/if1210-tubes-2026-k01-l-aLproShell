@@ -82,6 +82,9 @@ void runDeletePage(WebPages *W, Map *M, char* s, const char *pages_folder, const
         return;
     }
 
+    unsetMap(s, M);
+    printf("[Status: Cache-Hit] URL ditemukan di cache dan telah dibersihkan\n");
+
     deleteAdj(del_idx, W->NEff);
 
     for (int i = del_idx; i < W->NEff - 1; i++) {
@@ -101,6 +104,8 @@ void runEditPage(WebPages *W, Map *M, char* s, const char *pages_folder) {
         printf("[ERROR] URL %s tidak ditemukan di database!\n", s);
         return;
     }
+
+    unsetMap(s, M);
 
     printf("Konten saat ini:\n%s\n", W->buffer[target_idx].content);
     printf("Linked pages saat ini:\n");
