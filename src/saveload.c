@@ -1,4 +1,5 @@
 #include "saveload.h"
+#include "regex.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -194,6 +195,16 @@ boolean LoadConfig(TabsList *TL, GlobalHistory *PQ, const char *f) {
     int c;
     while((c = fgetc(file)) != '\n' && c != EOF){}
 
+    if(tabCount > TABS_MAX_AMOUNT){
+        printf("WARNING: Jumlah tab (%d) melebihi TABS_MAX_AMOUNT (%d). Banyak tab dipangkas menuju TABS_MAX_AMOUNT.\n", tabCount, TABS_MAX_AMOUNT);
+        tabCount = TABS_MAX_AMOUNT;
+    }
+
+    if(activeIdx < 1 || activeIdx > tabCount){
+        printf("WARNING: Tab yang dibuka (%d) tidak valid. Program membuka tab ke-1.\n", activeIdx);
+        if(tabCount > 0) activeIdx = 1;
+    }
+
     for (int i = 0; i < TABS_MAX_AMOUNT; i++) 
     {
         TL->tabs[i].isUsed = false;
@@ -219,6 +230,17 @@ boolean LoadConfig(TabsList *TL, GlobalHistory *PQ, const char *f) {
 
         if(sscanf(tabData, "%10s %d %d", tabName, &historyCount, &currentHistoryIdx) != 3) continue;
 
+        if(historyCount < 0) historyCount = 0;
+        if(historyCount > MAX_WEB) {
+            printf("WARNING: Jumlah histori %s (%d) melebihi MAX_WEB (%d). Banyak histori dipangkas menuju MAX_WEB.\n", tabName, historyCount, MAX_WEB);
+            historyCount = MAX_WEB;
+        }
+
+        if(historyCount > 0 && (currentHistoryIdx < 1 || currentHistoryIdx > historyCount)){
+            printf("WARNING: Histori website ke-%d %s tidak ada. Program membuka tab terakhir.\n", currentHistoryIdx, tabName);
+            currentHistoryIdx = historyCount;
+        }
+
         strncpy(TL->tabs[i].name, tabName, TAB_NAME_LENGTH);
         TL->tabs[i].name[TAB_NAME_LENGTH - 1] = '\0';
         TL->tabs[i].isUsed = true;
@@ -242,10 +264,30 @@ boolean LoadConfig(TabsList *TL, GlobalHistory *PQ, const char *f) {
 
         char *tok = strtok(tabUrl, " \t\r\n");
 
-        while(got < historyCount){
-            urls[got++] = tok;
+        while(got < historyCount && tok != NULL){
+            if(isWebsiteValid(tok)){
+                urls[got++] = tok;
+            } 
+            else{
+                if (got < currentHistoryIdx){
+                    if(currentHistoryIdx > 1) currentHistoryIdx--; 
+                }
+                historyCount--; 
+            }
             tok = strtok(NULL, " \t\r\n");
         }
+
+        if(got == 0){
+            P->Empty = true;
+            continue;
+        }
+
+        if(got < historyCount){
+            historyCount = got;
+            if(currentHistoryIdx > historyCount) currentHistoryIdx = historyCount;
+        }
+
+        P->Empty = false;
 
         createStack(&(P->backHistory));
         for (int k = 0; k < currentHistoryIdx - 1; k++) 
@@ -272,8 +314,11 @@ boolean LoadConfig(TabsList *TL, GlobalHistory *PQ, const char *f) {
     if(PQ != NULL){
         int n = 0;
         if(fscanf(file, "%d", &n) == 1){
-            if (n < 0) n = 0;
-            if (n > HISTORY_MAX_AMOUNT) n = HISTORY_MAX_AMOUNT;
+            if(n < 0) n = 0;
+            if(n > HISTORY_MAX_AMOUNT){
+                printf("WARNING: Jumlah global history (%d) melebihi batas HISTORY_MAX_AMOUNT (%d). Banyak tab dipangkas menuju HISTORY_MAX_AMOUNT.\n", n, HISTORY_MAX_AMOUNT);
+                n = HISTORY_MAX_AMOUNT;
+            }
 
             CreateGlobalHistory(PQ);
             for (int i = 0; i < n; i++) 
