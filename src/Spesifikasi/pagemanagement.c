@@ -15,103 +15,168 @@ int getMaxPageId(WebPages *W) {
 }
 
 void runAddPage(WebPages *W, char* s) {
-    if (isFullWeb(*W)) {
-        printf("[ERROR] Database website sudah penuh! Tidak bisa menambah halaman baru.\n");
+    if (W->NEff >= 100) {
+        printf("[ERROR] Database website sudah penuh!\n");
         return;
     }
 
-    char content[10000];
-    printf("Masukkan Konten (akhiri dengan '.' lalu Enter): ");
-    int i = 0;
-    char temp_char;
-    int c;
-    while ((c = getchar()) == '\n' || c == ' ' || c == '\r');
-    if (c != EOF && c != '.') {
-        content[i++] = c;
-        while ((temp_char = getchar()) != '.' && temp_char != EOF && i < 9999) {
-            content[i++] = temp_char;
+    char content[10000] = "";
+    char line[512];
+    printf("Masukkan konten (Akhiri dengan titik '.' di baris baru):\n");
+    
+    while (fgets(line, sizeof(line), stdin)) {
+        line[strcspn(line, "\r\n")] = 0;
+        if (strcmp(line, ".") == 0) {
+            break;
+        }
+        if (strlen(content) + strlen(line) + 2 < 10000) {
+            strcat(content, line);
+            strcat(content, "\n");
         }
     }
-    content[i] = '\0';
-    while ((c = getchar()) != '\n' && c != EOF);
 
     int new_id = getMaxPageId(W) + 1;
+    int new_idx = W->NEff;
+    
+    W->buffer[new_idx].id = new_id;
+    strcpy(W->buffer[new_idx].web_url, s);
+    strcpy(W->buffer[new_idx].content, content);
+    W->NEff++;
 
-    AddWeb(W, new_id, s, content);
-    printf("[SUCCESS] Halaman %s berhasil ditambahkan!\n", s);
+    for (int i = 0; i < 100; i++) {
+        adj[new_idx][i] = 0;
+        adj[i][new_idx] = 0;
+    }
+
+    printf("Masukkan linked pages (Ketik 'DONE' jika sudah selesai):\n");
+    char link_url[256];
+    while (1) {
+        printf(">>> ");
+        if (!fgets(link_url, sizeof(link_url), stdin)) break;
+        link_url[strcspn(link_url, "\r\n")] = 0;
+
+        if (strcmp(link_url, "DONE") == 0) {
+            break;
+        }
+
+        int target_idx = findUrl(W, link_url);
+
+        if (target_idx == -1) {
+            printf("URL tidak ditemukan!\n");
+        } else {
+            adj[new_idx][target_idx] = 1; 
+            printf("Berhasil menghubungkan ke %s\n", link_url);
+        }
+    }
+
+    SaveToCSV(*W, "config/");
+    SaveLinkedPages(W, "config/linked_pages.csv");
+    printf("Halaman %s berhasil ditambahkan!\n", s);
 }
 
 void runDeletePage(WebPages *W, Map *M, char* s, const char *pages_folder, const char *links_filepath) {
-    if (isEmptyWeb(*W)) {
-        printf("[ERROR] Database website kosong!\n");
-        return;
-    }
-
-    int del_idx = -1;
-    int target_id = -1;
-    for (int i = 0; i < W->NEff; i++) {
-        if (strcmp(W->buffer[i].web_url, s) == 0) {
-            del_idx = i;
-            target_id = W->buffer[i].id;
-            break;
-        }
-    }
+    int del_idx = findUrl(W, s);
 
     if (del_idx == -1) {
         printf("[ERROR] URL %s tidak ditemukan di database!\n", s);
-    } else {
-        deleteAdj(del_idx, W->NEff);
-        
-        RemoveWeb(W, target_id);
-        
-        unsetMap(s, M);
-        
-        SaveToCSV(*W, pages_folder);
-        SaveLinkedPages(W, links_filepath);        
-        printf("[SUCCESS] Halaman %s berhasil dihapus!\n", s);
-    }
-}
-
-void runEditPage(WebPages *W, Map *M, char* s, const char *pages_folder) {
-    if (isEmptyWeb(*W)) {
-        printf("[ERROR] Database website kosong!\n");
         return;
     }
 
-    int target_idx = -1;
-    for (int i = 0; i < W->NEff; i++) {
-        if (strcmp(W->buffer[i].web_url, s) == 0) {
-            target_idx = i;
-            break;
-        }
+    unsetMap(s, M);
+    printf("[Status: Cache-Hit] URL ditemukan di cache dan telah dibersihkan\n");
+
+    deleteAdj(del_idx, W->NEff);
+
+    for (int i = del_idx; i < W->NEff - 1; i++) {
+        W->buffer[i] = W->buffer[i + 1];
     }
+    W->NEff--;
+
+    SaveToCSV(*W, pages_folder);
+    SaveLinkedPages(W, links_filepath);        
+    printf("Halaman %s berhasil dihapus!\n", s);
+}
+
+void runEditPage(WebPages *W, Map *M, char* s, const char *pages_folder) {
+    int target_idx = findUrl(W, s);
 
     if (target_idx == -1) {
         printf("[ERROR] URL %s tidak ditemukan di database!\n", s);
         return;
     }
 
-    char content[10000];
-    printf("Masukkan Konten Baru (akhiri dengan '.' lalu Enter): ");
+    unsetMap(s, M);
+
+    printf("Konten saat ini:\n%s\n", W->buffer[target_idx].content);
+    printf("Linked pages saat ini:\n");
+    displayLinkedPages(W, target_idx);
+    printf("\n");
+
+    char new_content[10000] = "";
+    char line[512];
+    printf("Masukkan konten baru (akhiri dengan '.' atau ketik '.' saja jika tidak ingin diubah):\n");
     
-    int i = 0;
-    char temp_char;
-    int c;
-    while ((c = getchar()) == '\n' || c == ' ' || c == '\r');
-    if (c != EOF && c != '.') {
-        content[i++] = c;
-        while ((temp_char = getchar()) != '.' && temp_char != EOF && i < 9999) {
-            content[i++] = temp_char;
+    int is_first_line = 1;
+    int update_content = 1;
+    
+    while (fgets(line, sizeof(line), stdin)) {
+        line[strcspn(line, "\r\n")] = 0;
+        if (is_first_line && strcmp(line, ".") == 0) {
+            update_content = 0;
+            break;
+        }
+        is_first_line = 0;
+        if (strcmp(line, ".") == 0) {
+            break;
+        }
+        if (strlen(new_content) + strlen(line) + 2 < 10000) {
+            strcat(new_content, line);
+            strcat(new_content, "\n");
         }
     }
-    content[i] = '\0';
-    while ((c = getchar()) != '\n' && c != EOF);
 
-    strcpy(W->buffer[target_idx].content, content);
+    if (update_content) {
+        strcpy(W->buffer[target_idx].content, new_content);
+    }
 
-    setMap(s, content, M);
-    
+    printf("Masukkan linked pages baru (Ketik 'DONE' untuk selesai, atau 'SKIP' jika tidak ingin mengubah link):\n");
+    char edit_link[256];
+    int cleared_old_links = 0;
+
+    while (1) {
+        printf(">>> ");
+        if (!fgets(edit_link, sizeof(edit_link), stdin)) break;
+        edit_link[strcspn(edit_link, "\r\n")] = 0;
+
+        if (strcmp(edit_link, "SKIP") == 0) {
+            break; 
+        }
+        if (strcmp(edit_link, "DONE") == 0) {
+            break;
+        }
+
+        if (!cleared_old_links) {
+            for (int i = 0; i < 100; i++) {
+                adj[target_idx][i] = 0;
+            }
+            cleared_old_links = 1;
+        }
+
+        int link_target_idx = findUrl(W, edit_link);
+
+        if (link_target_idx == -1) {
+            printf("URL tidak ditemukan!\n");
+        } else {
+            adj[target_idx][link_target_idx] = 1;
+            printf("Berhasil menghubungkan ke %s\n", edit_link);
+        }
+    }
+
     SaveToCSV(*W, pages_folder);
+    char linkedPath[512];
+    strcpy(linkedPath, pages_folder);
+    strcat(linkedPath, "linked_pages.csv");
+    SaveLinkedPages(W, linkedPath);
     
-    printf("[SUCCESS] Halaman %s berhasil diedit!\n", s);
+    printf("Halaman %s berhasil diperbarui!\n", s);
 }
