@@ -179,6 +179,8 @@ int main() {
                         printReal(isiHalaman);
                         printf("\n");
                         displayLinkedPages(W, aktif);
+                    } else {
+                        printf("Tidak ada Website\n");
                     }
                 }
 
@@ -208,6 +210,8 @@ int main() {
                         printReal(isiHalaman);
                         printf("\n");
                         displayLinkedPages(W, aktif);
+                    }else {
+                        printf("Tidak ada Website\n");
                     }
                 }
 
