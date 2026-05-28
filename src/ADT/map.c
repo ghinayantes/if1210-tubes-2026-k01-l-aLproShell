@@ -23,7 +23,8 @@ int hash(char* key, int capacity) {
 }
 
 void CreateMap(Map *M){
-    M->capacity = 10;
+    M->capacity = CACHE_MAX_AMOUNT;
+    if (M->capacity > MAX_CAPACITY) M->capacity = MAX_CAPACITY;
     M->buffer = (Node**)calloc(MAX_CAPACITY, sizeof(Node*));
     M->size = 0;
     M->head = NULL;

@@ -5,7 +5,9 @@
 #include <string.h>
 #include <stdlib.h>
 #include "boolean.h"
-#define MAX_CAPACITY 13
+#include "config.h"
+
+#define MAX_CAPACITY (CACHE_MAX_AMOUNT + 3)
 
 typedef struct Node{
     char* key;

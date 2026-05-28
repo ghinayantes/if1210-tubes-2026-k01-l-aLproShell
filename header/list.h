@@ -4,7 +4,7 @@
 #include "boolean.h"
 #include "history.h"
 
-#define TABS_MAX_AMOUNT 10
+#include "config.h"
 #define TAB_NAME_LENGTH 20
 
 typedef char TabName[TAB_NAME_LENGTH];
