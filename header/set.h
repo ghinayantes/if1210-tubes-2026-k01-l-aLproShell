@@ -5,6 +5,7 @@
 #include <string.h>
 
 #include "boolean.h"
+#include "config.h"
 
 typedef struct {
     int id;
@@ -13,7 +14,7 @@ typedef struct {
 } Web;
 
 typedef struct {
-    Web buffer[100]; 
+    Web buffer[MAX_WEB_PAGES]; 
     int NEff;            
 } WebPages;
 

@@ -26,8 +26,28 @@ void deleteAdj(int del_idx, int NEff) {
 }
 
 boolean SaveLinkedPages(WebPages *W, const char *filepath) {
+    FILE *check = fopen(filepath, "r");
+    if(check){
+        fclose(check);
+        printf("WARNING: %s already exists, overwrite? (y/n): ", filepath);
+        char ans;
+        scanf(" %c", &ans);
+        if(ans != 'y' && ans != 'Y'){
+            printf("Save cancelled.\n");
+            return false;
+        }
+        printf("Overwriting %s...\n", filepath);
+        printf("Data saved!\n");
+    }
+    else{
+        printf("Saving data into %s...\n", filepath);
+    }
+
     FILE *f = fopen(filepath, "w");
-    if (!f) return false;
+    if(!f){
+        printf("ERROR: Could not open %s for writing.\n", filepath);
+        return false;
+    }
 
     fprintf(f, "id,id_sumber,id_tujuan\n");
     int link_id = 1;

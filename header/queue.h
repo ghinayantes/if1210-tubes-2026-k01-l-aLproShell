@@ -1,7 +1,8 @@
 #ifndef QUEUE_H
 #define QUEUE_H
 
-#define DOWNLOAD_MAX_AMOUNT 5
+#include "config.h"
+#define URL_MAX_LENGTH 256
 
 #include "url.h"
 
