@@ -1,11 +1,23 @@
+#include <stdlib.h>
+
 #include "search.h"
 #include "set.h"
 
-void badChar(char* s, int len, int bc[]){
-    for (int i = 0; i < 256; i++)
+void makeLowerCase(char* s, char* sL, int len){
+    for (int i = 0; i < len; i++) 
     {
-        bc[i] = -1;
+        if(s[i] >= 'A' && s[i] <= 'Z'){
+            sL[i] = s[i] + 32;
+        } 
+        else{
+            sL[i] = s[i];
+        }
     }
+    sL[len] = '\0'; 
+}
+
+void badChar(char* s, int len, int bc[]){
+    for (int i = 0; i < 256; i++) bc[i] = -1;
     
     for (int i = 0; i < len; i++)
     {
@@ -46,12 +58,15 @@ void goodSuffix(char* s, int len, int shift[], int b[]){
 void boyerMoore(char* s, WebPages W){
     int m = strlen(s);
 
+    char lowerS[m + 1];
+    makeLowerCase(s, lowerS, m);
+
     int bc[256];
     int shift[m + 1];
     int border[m + 1];
 
-    badChar(s, m, bc);
-    goodSuffix(s, m, shift, border);
+    badChar(lowerS, m, bc);
+    goodSuffix(lowerS, m, shift, border);
 
     int count = 0;
 
@@ -64,6 +79,10 @@ void boyerMoore(char* s, WebPages W){
         {
             char* text = contentext[t];
             int n = strlen(text);
+            
+            char lowerT[1000000];
+            makeLowerCase(text, lowerT, n);
+
             int i = m - 1;
 
             while(i < n && !found){
@@ -72,7 +91,7 @@ void boyerMoore(char* s, WebPages W){
                 
                 while(j >= 0 && !mismatch){
                     int pos = i - (m - 1 - j);
-                    if(s[j] != text[pos]){
+                    if(lowerS[j] != lowerT[pos]){
                         mismatch = 1;
                     } 
                     else{
@@ -86,16 +105,16 @@ void boyerMoore(char* s, WebPages W){
                     count++;
                 } 
                 else{
-                    int pos  = i - (m - 1 - j);
-                    int bc_shift  = j - bc[(int)text[pos]];
-                    if (bc_shift < 1) bc_shift = 1;
-                    int gs_shift  = shift[j + 1];
+                    int pos = i - (m - 1 - j);
+                    int bcS = j - bc[(int)lowerT[pos]];
+                    if(bcS < 1) bcS = 1;
+                    int gsS = shift[j + 1];
 
-                    if (bc_shift > gs_shift){
-                        i += bc_shift;
+                    if(bcS > gsS){
+                        i += bcS;
                     }
                     else{
-                        i += gs_shift;
+                        i += gsS;
                     }
                 }
             }
