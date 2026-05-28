@@ -12,7 +12,7 @@ void printBanner() {
     printf("\033[1;36m");
     printf("   █████████   ████                                █████████  █████               ████  ████ \n");
     printf("  ███░░░░░███ ░░███                               ███░░░░░███░░███               ░░███ ░░███ \n");
-    printf(" ░███    ░███  ░███  ████████  ████████   ██████ ░███     ░░░  ░███████    ██████  ░███  ░███ \n");
+    printf(" ░███    ░███  ░███  ████████  ████████   ██████ ░███     ░░░ ░███████    ██████  ░███  ░███ \n");
     printf(" ░███████████  ░███ ░░███░░███░░███░░███ ███░░███░░█████████  ░███░░███  ███░░███ ░███  ░███ \n");
     printf(" ░███░░░░░███  ░███  ░███ ░███ ░███ ░░░ ░███ ░███ ░░░░░░░░███ ░███ ░███ ░███████  ░███  ░███ \n");
     printf(" ░███    ░███  ░███  ░███ ░███ ░███     ░███ ░███ ███    ░███ ░███ ░███ ░███░░░   ░███  ░███ \n");
@@ -59,6 +59,7 @@ int main() {
     DownloadQueueInit(&DQ);
     loadData(W);
     LoadLinkedPages(W, "config/linked_pages.csv");
+    LoadConfig(TL, "config/config.txt");
 
     // TO SEE IF THE DATABASE ACTUALLY LOADED
     // if(loadData(W)) printf("\n%d Website dari database telah di-load otomatis...\n", W.NEff);
@@ -237,10 +238,10 @@ int main() {
             scanf(" %s", url);
             flushInput();
 
-            if(isWebsiteValid(url)) {
+            if(isWebsiteValid(url)){
                 runEditPage(W, M, url, "config/");
             } 
-            else {
+            else{
                 printf("Format domain tidak valid, tolong tulis domain kembali."); 
             }  
         }
@@ -256,6 +257,28 @@ int main() {
             if(LoadFromCSV(W, database)){
                 DestroyMap(M);
                 CreateMap(M);
+
+                char folder[512];
+                strcpy(folder, database);
+
+                int i = strlen(folder) - 1;
+                while (i >= 0 && folder[i] != '/') {
+                    i--;
+                }
+
+                if(i >= 0){
+                    folder[i + 1] = '\0';
+                } 
+                else {
+                    folder[0] = '\0';
+                }
+
+                char configPath[512];
+                strcpy(configPath, folder);
+                strcat(configPath, "config.txt");
+
+                LoadConfig(TL, configPath);
+
                 printf("%d Website dari database telah di-load ulang...\n\n", W->NEff); 
                 printBanner();
                 printf("\nSelamat datang di AlproShell! Berikut adalah beberapa command yang bisa digunakan.\nGunakan \033[1mhelp\033[0m jika ingin melihat kembali command yang tersedia.\n");
@@ -276,7 +299,15 @@ int main() {
                 strcat(path, "/");
             }
 
-            if(SaveToCSV(*W, path)){}
+            if(SaveToCSV(*W, path)){
+                SaveConfig(TL, path);
+
+                char linkedPath[512];
+                strcpy(linkedPath, path);
+                strcat(linkedPath, "linked_pages.csv");
+
+                SaveLinkedPages(W, linkedPath);
+            }
         }
 
         else if (strcmp(command, "help") == 0) {
@@ -286,7 +317,7 @@ int main() {
 
         else if (strcmp(command, "exit") == 0) {
             char path[256] = "";
-            exitProgram(W, path);
+            exitProgram(W, TL, path);
             free(TL);
             free(W);
             free(M);
