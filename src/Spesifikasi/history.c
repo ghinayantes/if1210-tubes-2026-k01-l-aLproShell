@@ -8,12 +8,18 @@ void createTab(Page *P){
 }
 
 void bukaHalaman(Page *P,Webname New){
-    if (P->Empty == false){
-        push(&(P->backHistory), P->currentTab);
+    if (P->Empty == true){
+        P->currentTab = New;
+        P->Empty = false;
+        createStack(&(P->forwardHistory));
+    } else{
+        if (strcmp(P->currentTab.url, New.url) != 0) {
+            push(&(P->backHistory), P->currentTab);
+            P->currentTab = New;
+            createStack(&(P->forwardHistory));
+        }
     }
-    P->currentTab = New;
-    P->Empty = false;
-    createStack(&(P->forwardHistory));
+    
 }
 
 void back(Page *P, int langkah){
