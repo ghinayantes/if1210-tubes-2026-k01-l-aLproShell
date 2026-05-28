@@ -93,7 +93,7 @@ int main() {
                 printf("\n");
                 cmd_open(url, W, M, TL, &PQ);
             }
-            else printf("Format domain tidak valid, tolong tulis domain kembali.");
+            else printf("Format domain tidak valid, tolong masukkan input kembali.");
         }
 
         else if (strcmp(command, "openlinked") == 0) {
@@ -141,11 +141,15 @@ int main() {
             char url[100];
             scanf(" %s", url);
             flushInput();
-            if(isWebsiteValid(url)) {
-                printf("\n\033[1;36m  ██ Available Commands \033[0m\n");
-                printf("  Untuk menambah progress download suatu website, gunakan \033[1mtick\033[0m\n\n");
-                DownloadQueueDownload(&DQ, url);
+            if(isWebsiteValid(url)){
+                if(getWeb(url, W)){
+                    printf("\n\033[1;36m  ██ Available Commands \033[0m\n");
+                    printf("  Untuk menambah progress download suatu website, gunakan \033[1mtick\033[0m\n\n");
+                    DownloadQueueDownload(&DQ, url);
+                }
+                else printf("URL tidak ditemukan dalam database, tolong masukkan input kembali.\n");
             }
+            else printf("Format domain tidak valid, tolong masukkan input kembali.\n");
         }
 
         else if (strcmp(command, "tick") == 0) {
@@ -238,7 +242,7 @@ int main() {
                     runAddPage(W, url);
                 }
             } 
-            else printf("Format domain tidak valid, tolong tulis domain kembali.");   
+            else printf("Format domain tidak valid, tolong masukkan input kembali.");   
         }
 
         else if (strcmp(command, "delete_page") == 0) {
@@ -249,7 +253,7 @@ int main() {
             if(isWebsiteValid(url)) {
                 runDeletePage(W, M, url, "config/", "config/linked_pages.csv");
             }
-            else printf("Format domain tidak valid, tolong tulis domain kembali.");
+            else printf("Format domain tidak valid, tolong masukkan input kembali.");
         }
 
         else if (strcmp(command, "edit_page") == 0) {
@@ -261,7 +265,7 @@ int main() {
                 runEditPage(W, M, url, "config/");
             } 
             else{
-                printf("Format domain tidak valid, tolong tulis domain kembali."); 
+                printf("Format domain tidak valid, tolong masukkan input kembali."); 
             }  
         }
 
@@ -346,6 +350,8 @@ int main() {
             free(M);
             return 0;
         }
+
+        else printf("Command tidak valid!\n");
     }
     
     return 0;
