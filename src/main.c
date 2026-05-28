@@ -172,13 +172,15 @@ int main() {
                 if (isiHalaman != NULL) {
                     printReal(isiHalaman); 
                     printf("\n");
-                    displayLinkedPages(W, aktif);
+                    int urlIdx = findUrl(W, urlSekarang);
+                    if (urlIdx != -1) displayLinkedPages(W, urlIdx);    
                 } else {
                     isiHalaman = getWeb(urlSekarang, W);
                     if (isiHalaman != NULL) {
                         printReal(isiHalaman);
                         printf("\n");
-                        displayLinkedPages(W, aktif);
+                        int urlIdx = findUrl(W, urlSekarang);
+                        if (urlIdx != -1) displayLinkedPages(W, urlIdx);    
                     } else {
                         printf("Tidak ada Website\n");
                     }
@@ -203,13 +205,15 @@ int main() {
                 if (isiHalaman != NULL) {
                     printReal(isiHalaman); 
                     printf("\n");
-                    displayLinkedPages(W, aktif);
+                    int urlIdx = findUrl(W, urlSekarang);
+                    if (urlIdx != -1) displayLinkedPages(W, urlIdx);    
                 } else {
                     isiHalaman = getWeb(urlSekarang, W);
                     if (isiHalaman != NULL) {
                         printReal(isiHalaman);
                         printf("\n");
-                        displayLinkedPages(W, aktif);
+                        int urlIdx = findUrl(W, urlSekarang);
+                        if (urlIdx != -1) displayLinkedPages(W, urlIdx);    
                     }else {
                         printf("Tidak ada Website\n");
                     }
