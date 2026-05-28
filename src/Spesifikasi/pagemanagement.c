@@ -15,7 +15,7 @@ int getMaxPageId(WebPages *W) {
 }
 
 void runAddPage(WebPages *W, char* s) {
-    if (W->NEff >= 100) {
+    if (isFullWeb(*W)) {
         printf("[ERROR] Database website sudah penuh!\n");
         return;
     }
@@ -24,14 +24,16 @@ void runAddPage(WebPages *W, char* s) {
     char line[512];
     printf("Masukkan konten (Akhiri dengan titik '.' di baris baru):\n");
     
-    while (fgets(line, sizeof(line), stdin)) {
+    int finished_content = 0;
+    while (!finished_content && fgets(line, sizeof(line), stdin)) {
         line[strcspn(line, "\r\n")] = 0;
         if (strcmp(line, ".") == 0) {
-            break;
-        }
-        if (strlen(content) + strlen(line) + 2 < 10000) {
-            strcat(content, line);
-            strcat(content, "\n");
+            finished_content = 1;
+        } else {
+            if (strlen(content) + strlen(line) + 2 < 10000) {
+                strcat(content, line);
+                strcat(content, "\n");
+            }
         }
     }
 
@@ -50,22 +52,27 @@ void runAddPage(WebPages *W, char* s) {
 
     printf("Masukkan linked pages (Ketik 'DONE' jika sudah selesai):\n");
     char link_url[256];
-    while (1) {
+    
+    int finished_links = 0;
+    while (!finished_links) {
         printf(">>> ");
-        if (!fgets(link_url, sizeof(link_url), stdin)) break;
-        link_url[strcspn(link_url, "\r\n")] = 0;
-
-        if (strcmp(link_url, "DONE") == 0) {
-            break;
-        }
-
-        int target_idx = findUrl(W, link_url);
-
-        if (target_idx == -1) {
-            printf("URL tidak ditemukan!\n");
+        if (!fgets(link_url, sizeof(link_url), stdin)) {
+            finished_links = 1;
         } else {
-            adj[new_idx][target_idx] = 1; 
-            printf("Berhasil menghubungkan ke %s\n", link_url);
+            link_url[strcspn(link_url, "\r\n")] = 0;
+
+            if (strcmp(link_url, "DONE") == 0) {
+                finished_links = 1;
+            } else {
+                int target_idx = findUrl(W, link_url);
+
+                if (target_idx == -1) {
+                    printf("URL tidak ditemukan!\n");
+                } else {
+                    adj[new_idx][target_idx] = 1; 
+                    printf("Berhasil menghubungkan ke %s\n", link_url);
+                }
+            }
         }
     }
 
@@ -119,19 +126,20 @@ void runEditPage(WebPages *W, Map *M, char* s, const char *pages_folder) {
     int is_first_line = 1;
     int update_content = 1;
     
-    while (fgets(line, sizeof(line), stdin)) {
+    int finished_edit_content = 0;
+    while (!finished_edit_content && fgets(line, sizeof(line), stdin)) {
         line[strcspn(line, "\r\n")] = 0;
         if (is_first_line && strcmp(line, ".") == 0) {
             update_content = 0;
-            break;
-        }
-        is_first_line = 0;
-        if (strcmp(line, ".") == 0) {
-            break;
-        }
-        if (strlen(new_content) + strlen(line) + 2 < 10000) {
-            strcat(new_content, line);
-            strcat(new_content, "\n");
+            finished_edit_content = 1;
+        } else if (strcmp(line, ".") == 0) {
+            finished_edit_content = 1;
+        } else {
+            is_first_line = 0;
+            if (strlen(new_content) + strlen(line) + 2 < 10000) {
+                strcat(new_content, line);
+                strcat(new_content, "\n");
+            }
         }
     }
 
@@ -143,32 +151,33 @@ void runEditPage(WebPages *W, Map *M, char* s, const char *pages_folder) {
     char edit_link[256];
     int cleared_old_links = 0;
 
-    while (1) {
+    int finished_edit_links = 0;
+    while (!finished_edit_links) {
         printf(">>> ");
-        if (!fgets(edit_link, sizeof(edit_link), stdin)) break;
-        edit_link[strcspn(edit_link, "\r\n")] = 0;
-
-        if (strcmp(edit_link, "SKIP") == 0) {
-            break; 
-        }
-        if (strcmp(edit_link, "DONE") == 0) {
-            break;
-        }
-
-        if (!cleared_old_links) {
-            for (int i = 0; i < 100; i++) {
-                adj[target_idx][i] = 0;
-            }
-            cleared_old_links = 1;
-        }
-
-        int link_target_idx = findUrl(W, edit_link);
-
-        if (link_target_idx == -1) {
-            printf("URL tidak ditemukan!\n");
+        if (!fgets(edit_link, sizeof(edit_link), stdin)) {
+            finished_edit_links = 1;
         } else {
-            adj[target_idx][link_target_idx] = 1;
-            printf("Berhasil menghubungkan ke %s\n", edit_link);
+            edit_link[strcspn(edit_link, "\r\n")] = 0;
+
+            if (strcmp(edit_link, "SKIP") == 0 || strcmp(edit_link, "DONE") == 0) {
+                finished_edit_links = 1;
+            } else {
+                if (!cleared_old_links) {
+                    for (int i = 0; i < 100; i++) {
+                        adj[target_idx][i] = 0;
+                    }
+                    cleared_old_links = 1;
+                }
+
+                int link_target_idx = findUrl(W, edit_link);
+
+                if (link_target_idx == -1) {
+                    printf("URL tidak ditemukan!\n");
+                } else {
+                    adj[target_idx][link_target_idx] = 1;
+                    printf("Berhasil menghubungkan ke %s\n", edit_link);
+                }
+            }
         }
     }
 

@@ -28,11 +28,13 @@ void runDiscover(WebPages *W, unsigned int *seed) {
         int target_index = temp_seed % (W->NEff); 
         
         int is_duplicate = 0;
-        for (int i = 0; i < count; i++) {
+        int i = 0;
+        
+        while (i < count && !is_duplicate) {
             if (picked[i] == target_index) {
                 is_duplicate = 1;
-                break;
             }
+            i++;
         }
         
         if (!is_duplicate) {
