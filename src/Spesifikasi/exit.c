@@ -1,7 +1,7 @@
 #include "exit.h"
 #include <stdio.h>
 
-void exitProgram(WebPages *W, TabsList *TL, char *f) {
+void exitProgram(WebPages *W, TabsList *TL, GlobalHistory *PQ, char *f) {
     char pilih;    
     printf("Save data before exiting? (y/n)\n");
     scanf(" %c", &pilih);
@@ -15,7 +15,7 @@ void exitProgram(WebPages *W, TabsList *TL, char *f) {
             strcat(f,"/");
         }
         if (SaveToCSV(*W, f)) {
-            if (!SaveConfig(TL, f)) {
+            if (!SaveConfig(TL, PQ, f)) {
                 printf("WARNING: config.txt was not saved.\n");
             }
 

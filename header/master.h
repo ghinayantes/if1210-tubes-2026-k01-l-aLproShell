@@ -23,6 +23,7 @@
 #include "history.h"
 #include "discover.h"
 #include "pagemanagement.h"
+#include "prioqueue.h"
 #include "exit.h"
 
 #include "openlinked.h"

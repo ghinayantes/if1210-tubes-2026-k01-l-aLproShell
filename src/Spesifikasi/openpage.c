@@ -1,4 +1,5 @@
 #include "openpage.h"
+
 #include <stdio.h>
 
 void printReal(char *str){
@@ -13,7 +14,7 @@ void printReal(char *str){
 }
 
 
-void openpage(char* s, WebPages *W, Map *M, TabsList *TL){
+void openpage(char* s, WebPages *W, Map *M, TabsList *TL, GlobalHistory *PQ){
     char* val = getMap(s, M);
     if (val != NULL) {
         printf("[Status: Cache-Hit] Mengambil data dari cache...\n\n");
@@ -23,6 +24,9 @@ void openpage(char* s, WebPages *W, Map *M, TabsList *TL){
         Webname webBaru;
         strcpy(webBaru.url, s);
         int aktif = TL->currentIdx;
+        UrlHistory page;
+        strcpy(page.url, s);
+        EnqueueGlobal(PQ, page);
         bukaHalaman(&(TL->tabs[aktif].tabHistory), webBaru);
     } 
     else {
@@ -35,6 +39,9 @@ void openpage(char* s, WebPages *W, Map *M, TabsList *TL){
             Webname webBaru;
             strcpy(webBaru.url, s);
             int aktif = TL->currentIdx;
+            UrlHistory page;
+            strcpy(page.url, s);
+            EnqueueGlobal(PQ, page);
             bukaHalaman(&(TL->tabs[aktif].tabHistory), webBaru);
         } else {
             printf("Tidak ada Website\n");

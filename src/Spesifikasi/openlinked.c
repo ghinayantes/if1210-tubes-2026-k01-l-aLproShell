@@ -123,17 +123,17 @@ void displayPage(WebPages *W, int idx) {
 
 
 
-void cmd_open(char *web_url, WebPages *W, Map *M, TabsList *TL) {
+void cmd_open(char *web_url, WebPages *W, Map *M, TabsList *TL, GlobalHistory *PQ) {
     int idx = findUrl(W, web_url);
     if (idx == -1) {
         printf("ERROR: HALAMAN '%s' TIDAK DITEMUKAN!\n", web_url);
         return;
     } 
-    openpage(web_url, W,M, TL);
+    openpage(web_url, W,M, TL, PQ);
     displayLinkedPages(W, idx);
 }
 
-void openLinked(int x, WebPages *W, Map *M, TabsList *TL) {
+void openLinked(int x, WebPages *W, Map *M, TabsList *TL, GlobalHistory *PQ) {
     int aktif = TL->currentIdx;
     if (TL->tabs[aktif].tabHistory.Empty) {
         printf("ERROR: TIDAK ADA HALAMAN YANG SEDANG TERBUKA DI TAB INI!\n");
@@ -162,5 +162,5 @@ void openLinked(int x, WebPages *W, Map *M, TabsList *TL) {
         return;
     }
     char *target_url = W->buffer[target_page_idx].web_url;
-    cmd_open(target_url, W, M, TL);
+    cmd_open(target_url, W, M, TL, PQ);
 }

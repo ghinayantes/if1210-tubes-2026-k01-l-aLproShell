@@ -4,6 +4,6 @@
 #include "saveload.h"
 #include "openlinked.h"
 
-void exitProgram(WebPages *W, TabsList *TL, char *f);
+void exitProgram(WebPages *W, TabsList *TL, GlobalHistory *PQ, char *f);
 
 #endif

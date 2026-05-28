@@ -167,8 +167,9 @@ boolean loadData(WebPages *W) {
     return false;
 }
 
-boolean LoadConfig(TabsList *TL, const char *f) {
+boolean LoadConfig(TabsList *TL, GlobalHistory *PQ, const char *f) {
     if(TL == NULL) return false;
+    if(PQ != NULL) CreateGlobalHistory(PQ);
 
     FILE *file = fopen(f, "r");
     if(!file) return false;
@@ -218,8 +219,7 @@ boolean LoadConfig(TabsList *TL, const char *f) {
 
         if(sscanf(tabData, "%10s %d %d", tabName, &historyCount, &currentHistoryIdx) != 3) continue;
 
-        strncpy(TL->tabs[i].name, tabName, TAB_NAME_LENGTH);
-        TL->tabs[i].name[TAB_NAME_LENGTH - 1] = '\0';
+        strcpy(TL->tabs[i].name, tabName);
         TL->tabs[i].isUsed = true;
         createTab(&(TL->tabs[i].tabHistory));
 
@@ -241,7 +241,7 @@ boolean LoadConfig(TabsList *TL, const char *f) {
 
         char *tok = strtok(tabUrl, " \t\r\n");
 
-        while(got < historyCount){
+        while(got < historyCount && tok != NULL){
             urls[got++] = tok;
             tok = strtok(NULL, " \t\r\n");
         }
@@ -268,6 +268,22 @@ boolean LoadConfig(TabsList *TL, const char *f) {
 
     if(TL->tabCounter == 0) TL->tabCounter = TL->count;
 
+    if(PQ != NULL){
+        int n = 0;
+        if(fscanf(file, "%d", &n) == 1){
+            CreateGlobalHistory(PQ);
+            for (int i = 0; i < n; i++) 
+            {
+                char url[URL_MAX_LENGTH];
+                int visited = 0;
+                if(fscanf(file, "%255s %d", url, &visited) != 2) break;
+                strcpy(PQ->buffer[i].url, url);
+                PQ->buffer[i].visited = visited;
+                PQ->size = i + 1;
+            }
+        }
+    }
+
     fclose(file);
 
     if(cacheMax != CACHE_MAX_AMOUNT || tabsMax != TABS_MAX_AMOUNT || downloadMax != DOWNLOAD_MAX_AMOUNT || maxPages != MAX_WEB_PAGES){
@@ -277,7 +293,7 @@ boolean LoadConfig(TabsList *TL, const char *f) {
     return true;
 }
 
-boolean SaveConfig(const TabsList *TL, const char *folder){
+boolean SaveConfig(const TabsList *TL, const GlobalHistory *PQ, const char *folder){
     if(TL == NULL) return false;
 
     char path[512];
@@ -350,7 +366,14 @@ boolean SaveConfig(const TabsList *TL, const char *folder){
 
         fprintf(file, "\n");
     }
-
+    if(PQ != NULL){
+        fprintf(file, "%d\n", PQ->size);
+        for (int i = 0; i < PQ->size; i++) 
+        {
+            fprintf(file, "%s %d\n", PQ->buffer[i].url, PQ->buffer[i].visited);
+        }
+    }
     fclose(file);
+
     return true;
 }
