@@ -15,9 +15,9 @@ int tabParser(const char *s){
 }
 
 void setWebname(Webname *w, const char *url) {
-    if (w == NULL) return;
+    if(w == NULL) return;
     
-    if (url == NULL) {
+    if(url == NULL){
         w->url[0] = '\0';
         return;
     }
@@ -25,7 +25,7 @@ void setWebname(Webname *w, const char *url) {
     int maxSize = sizeof(w->url) - 1;
     int i = 0;
     
-    while (url[i] != '\0' && i < maxSize) {
+    while(url[i] != '\0' && i < maxSize){
         w->url[i] = url[i];
         i++;
     }
@@ -43,7 +43,6 @@ boolean LoadFromCSV(WebPages *W, const char *path) {
     W->NEff = 0;
     char line[20000];
     
-
     while(fgets(line, sizeof(line), file)){
         const char *p = line;
         int id;
@@ -60,7 +59,8 @@ boolean LoadFromCSV(WebPages *W, const char *path) {
         int size[2] = {sizeof(url), sizeof(content)};
         boolean valid = true;
 
-        for (int f = 0; f < 2 && valid; f++) {
+        for (int f = 0; f < 2 && valid; f++) 
+        {
             if(*p != ',' || *(p+1) != '"'){ 
                 valid = false; 
             }
@@ -219,7 +219,8 @@ boolean LoadConfig(TabsList *TL, GlobalHistory *PQ, const char *f) {
 
         if(sscanf(tabData, "%10s %d %d", tabName, &historyCount, &currentHistoryIdx) != 3) continue;
 
-        strcpy(TL->tabs[i].name, tabName);
+        strncpy(TL->tabs[i].name, tabName, TAB_NAME_LENGTH);
+        TL->tabs[i].name[TAB_NAME_LENGTH - 1] = '\0';
         TL->tabs[i].isUsed = true;
         createTab(&(TL->tabs[i].tabHistory));
 
@@ -241,7 +242,7 @@ boolean LoadConfig(TabsList *TL, GlobalHistory *PQ, const char *f) {
 
         char *tok = strtok(tabUrl, " \t\r\n");
 
-        while(got < historyCount && tok != NULL){
+        while(got < historyCount){
             urls[got++] = tok;
             tok = strtok(NULL, " \t\r\n");
         }
@@ -271,13 +272,17 @@ boolean LoadConfig(TabsList *TL, GlobalHistory *PQ, const char *f) {
     if(PQ != NULL){
         int n = 0;
         if(fscanf(file, "%d", &n) == 1){
+            if (n < 0) n = 0;
+            if (n > HISTORY_MAX_AMOUNT) n = HISTORY_MAX_AMOUNT;
+
             CreateGlobalHistory(PQ);
             for (int i = 0; i < n; i++) 
             {
                 char url[URL_MAX_LENGTH];
                 int visited = 0;
-                if(fscanf(file, "%255s %d", url, &visited) != 2) break;
-                strcpy(PQ->buffer[i].url, url);
+                if (fscanf(file, "%255s %d", url, &visited) != 2) break;
+                strncpy(PQ->buffer[i].url, url, URL_MAX_LENGTH - 1);
+                PQ->buffer[i].url[URL_MAX_LENGTH - 1] = '\0';
                 PQ->buffer[i].visited = visited;
                 PQ->size = i + 1;
             }
@@ -366,14 +371,17 @@ boolean SaveConfig(const TabsList *TL, const GlobalHistory *PQ, const char *fold
 
         fprintf(file, "\n");
     }
+
     if(PQ != NULL){
-        fprintf(file, "%d\n", PQ->size);
-        for (int i = 0; i < PQ->size; i++) 
-        {
-            fprintf(file, "%s %d\n", PQ->buffer[i].url, PQ->buffer[i].visited);
+        if(file != NULL){
+            fprintf(file, "%d\n", PQ->size);
+            for (int i = 0; i < PQ->size; i++)
+            {
+                fprintf(file, "%s %d\n", PQ->buffer[i].url, PQ->buffer[i].visited);
+            }
         }
     }
-    fclose(file);
 
+    fclose(file);
     return true;
 }
