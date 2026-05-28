@@ -3,11 +3,11 @@
 
 void exitProgram(WebPages *W, TabsList *TL, GlobalHistory *PQ, char *f) {
     char pilih;    
-    printf("Save data before exiting? (y/n)\n");
+    printf("Apakah mau menyimpan data sebelum keluar program? (y/n)\n");
     scanf(" %c", &pilih);
 
     if (pilih == 'y' || pilih == 'Y') {
-        printf("Please input the save folder\n");
+        printf("Tolong masukkan save folder\n");
         scanf("%s", f);
 
         int len = strlen(f);
@@ -16,7 +16,7 @@ void exitProgram(WebPages *W, TabsList *TL, GlobalHistory *PQ, char *f) {
         }
         if (SaveToCSV(*W, f)) {
             if (!SaveConfig(TL, PQ, f)) {
-                printf("WARNING: config.txt was not saved.\n");
+                printf("PERINGATAN: config.txt tidak tersimpan.\n");
             }
 
             char linkedPath[512];
@@ -24,7 +24,7 @@ void exitProgram(WebPages *W, TabsList *TL, GlobalHistory *PQ, char *f) {
             strcat(linkedPath, "linked_pages.csv");
 
             if (!SaveLinkedPages(W, linkedPath)) {
-                printf("WARNING: linked_pages.csv was not saved.\n");
+                printf("PERINGATAN: linked_pages.csv tidak tersimpan.\n");
             }
 
             printf("Data berhasil disimpan di %s!\n", f);
