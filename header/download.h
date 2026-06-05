@@ -16,6 +16,8 @@ boolean DownloadIsFull(const DownloadQueue *dq);
 
 void DownloadCurrentURL(const DownloadQueue *dq, URL out); 
 
+void LookupWebPageContent(const char *url, char *out, int outSize);
+
 int  DownloadCurrentTicksLeft(const DownloadQueue *dq); 
 
 // operasi utama
